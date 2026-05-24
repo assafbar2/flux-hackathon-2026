@@ -1,5 +1,9 @@
+from pathlib import Path
+
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.responses import FileResponse
+from fastapi.staticfiles import StaticFiles
 from dotenv import load_dotenv
 
 load_dotenv()
@@ -29,3 +33,18 @@ app.include_router(action.router, prefix="/api")
 @app.get("/api/health")
 def health() -> dict[str, str]:
     return {"status": "ok"}
+
+
+STATIC_DIR = Path(__file__).resolve().parent / "static"
+ASSETS_DIR = STATIC_DIR / "assets"
+
+if ASSETS_DIR.exists():
+    app.mount("/assets", StaticFiles(directory=ASSETS_DIR), name="assets")
+
+
+@app.get("/{path:path}")
+def serve_frontend(path: str) -> FileResponse:
+    index_file = STATIC_DIR / "index.html"
+    if not index_file.exists():
+        return FileResponse(__file__, media_type="text/plain")
+    return FileResponse(index_file)
