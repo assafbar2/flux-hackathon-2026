@@ -46,13 +46,13 @@ From the new hire's point of view, Flux is a single link. Behind the scenes, it 
 
 ### Setup With Demo Data
 
-Flux states that it is using deployed demo data.
+Provision a new hire in one click and reveal a dynamic onboarding journey that changes as the team, work, and risks change.
 
-![Flux setup page showing deployed demo data note](docs/screenshots/setup-demo-data.png)
+![Flux setup page provisioning a new-hire journey](docs/screenshots/setup-demo-data.png)
 
 ### New-Hire Brief
 
-The generated brief tells the Marcus/auth/SSO story, safe first issues, people map, and unwritten rules.
+The generated brief turns live engineering activity and team context into a grounded first-day map: what is active, who owns what, where to start, and what to avoid.
 
 ![Flux new-hire brief with right-now, people map, week-one moves, and landmines](docs/screenshots/new-hire-brief.png)
 
