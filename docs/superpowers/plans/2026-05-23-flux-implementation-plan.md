@@ -29,7 +29,7 @@ The older checklist below remains useful as execution history, but current sourc
 ## Current Sources
 
 - Local requirements: `Google Hackathon - June 2026/AGENTS.md`
-- Local product spec: `Google Hackathon - June 2026/flux-design-spec.md`
+- Local product spec: `Google Hackathon - June 2026/docs/flux-design-spec.md`
 - Working assumption: local files are the current source of truth for scope, because live Devpost verification was blocked or unresolved during planning.
 
 ## Required Hackathon Tools
