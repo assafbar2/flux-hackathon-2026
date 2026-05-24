@@ -117,6 +117,25 @@ input {
   background: #eef4ea;
 }
 
+.demo-note {
+  display: flex;
+  gap: 10px;
+  align-items: flex-start;
+  padding: 12px;
+  border: 1px solid #d8c7a7;
+  border-radius: 6px;
+  color: #5b4520;
+  background: #fff3d8;
+  font-size: 13px;
+  font-weight: 700;
+  line-height: 1.4;
+}
+
+.demo-note svg {
+  flex: 0 0 auto;
+  margin-top: 1px;
+}
+
 .result a {
   overflow-wrap: anywhere;
   color: #143c37;

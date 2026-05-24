@@ -4,6 +4,64 @@ The org as it runs, not as it is drawn.
 
 Flux is a Google Cloud Rapid Agent Hackathon project for onboarding engineers into GitLab-based teams. It reads GitLab activity and an HR-maintained Notion guide, generates a day-one brief, answers grounded onboarding questions, and can assign a first GitLab issue after explicit confirmation.
 
+## Why Flux Exists
+
+Onboarding today is mostly a static promise: a PDF, a wiki page, a few links, and a manager saying "just ask around." That material is usually stale before the new hire reads it. It describes the official org chart, but not the real operating system of the company: who actually reviews auth, which migration is politically sensitive, who is on leave, which Slack channels are performative, and which first task is safe.
+
+The missing layer is **ground truth**. Companies already have it, but it is scattered across the work systems people use every day:
+
+- GitLab knows what is actually changing, who reviews it, which issues are open, and where the safe first contribution lives.
+- Notion knows the human context: team norms, availability, unwritten rules, meeting culture, and current priorities.
+- Cloud Run and Google Cloud Agent Builder make that context available as a live, grounded agent instead of another stale document.
+
+The beachhead is engineering onboarding for GitLab-based teams, but the broader TAM is workforce onboarding for every company whose work truth is split across collaboration tools. Every new engineer, support rep, operator, analyst, and manager needs the same thing on day one: not an org chart, but the living map of how the team works.
+
+## Workforce Components
+
+Flux is built for a modern company where HR and team leads maintain Notion, engineers work in GitLab, and new hires need a usable first-day experience without getting access to every internal system immediately.
+
+```mermaid
+flowchart LR
+  NH["New hire"]
+  Link["Flux hire link"]
+  Brief["Flux Brief\nRight Now, People Map,\nWeek 1 Moves, Landmines"]
+  Chat["Grounded chat\nwith sources"]
+  Action["Confirmed action\nAssign first GitLab issue"]
+  Notion["Notion team guide\nroles, norms, availability,\nunwritten rules"]
+  GitLab["GitLab MCP server\nissues, owners, reviews,\nfirst tasks"]
+  Agent["Google Cloud Agent Builder / ADK\nGemini reasoning + tool routing"]
+  Run["Cloud Run\npublic demo app"]
+
+  NH --> Link --> Run --> Agent
+  Agent --> Notion
+  Agent --> GitLab
+  Agent --> Brief --> NH
+  NH --> Chat --> Agent
+  NH --> Action --> Agent --> GitLab
+```
+
+From the new hire's point of view, Flux is a single link. Behind the scenes, it grounds every answer in the systems the company already trusts.
+
+## Screenshots
+
+### Setup With Demo Data
+
+When a judge leaves the fields blank, Flux now states that it is using deployed demo data instead of silently substituting placeholders.
+
+![Flux setup page showing deployed demo data note](docs/screenshots/setup-demo-data.png)
+
+### New-Hire Brief
+
+The generated brief tells the Marcus/auth/SSO story, safe first issues, people map, and unwritten rules.
+
+![Flux new-hire brief with right-now, people map, week-one moves, and landmines](docs/screenshots/new-hire-brief.png)
+
+### Move Beyond Chat
+
+Flux proposes a first real task and only writes to GitLab after confirmation.
+
+![Flux chat showing issue assignment confirmed](docs/screenshots/assignment-confirmed.png)
+
 ## Live Demo
 
 - App: https://flux-153593352872.us-central1.run.app

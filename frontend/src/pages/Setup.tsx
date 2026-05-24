@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { ArrowRight, CheckCircle2 } from "lucide-react";
+import { ArrowRight, CheckCircle2, Info } from "lucide-react";
 
 export function SetupPage() {
   const [gitlabToken, setGitlabToken] = useState("");
@@ -7,6 +7,7 @@ export function SetupPage() {
   const [notionUrl, setNotionUrl] = useState("");
   const [hireLink, setHireLink] = useState("");
   const [error, setError] = useState("");
+  const usingDemoData = !gitlabToken.trim() || !notionUrl.trim();
 
   async function submit(event: React.FormEvent) {
     event.preventDefault();
@@ -49,6 +50,12 @@ export function SetupPage() {
           Notion team guide URL
           <input value={notionUrl} onChange={(event) => setNotionUrl(event.target.value)} placeholder="https://notion.so/..." />
         </label>
+        {usingDemoData && (
+          <div className="demo-note">
+            <Info size={16} aria-hidden="true" />
+            <span>Using deployed demo data when GitLab token or Notion URL are blank.</span>
+          </div>
+        )}
         <button type="submit">
           Generate link
           <ArrowRight size={18} aria-hidden="true" />
