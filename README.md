@@ -46,7 +46,7 @@ From the new hire's point of view, Flux is a single link. Behind the scenes, it 
 
 ### Setup With Demo Data
 
-When a judge leaves the fields blank, Flux now states that it is using deployed demo data instead of silently substituting placeholders.
+Flux states that it is using deployed demo data.
 
 ![Flux setup page showing deployed demo data note](docs/screenshots/setup-demo-data.png)
 
