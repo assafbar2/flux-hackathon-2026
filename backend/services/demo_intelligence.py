@@ -1,19 +1,36 @@
 import json
+import os
 from pathlib import Path
 from typing import Any
 
 from services.influence_graph import build_influence_graph
+from services.notion import NotionClient
 from services.notion_parser import parse_team_guide
 
 
 DATA_DIR = Path(__file__).resolve().parents[1] / "demo_data"
 
 
+def load_team_guide_text() -> tuple[str, str]:
+    token = os.getenv("NOTION_TOKEN", "")
+    page_url = os.getenv("NOTION_PAGE_URL", "")
+    if token and page_url:
+        try:
+            live_text = NotionClient(token).fetch_page_markdown(page_url)
+        except Exception:
+            live_text = ""
+        if live_text.strip():
+            return live_text, "live_notion"
+
+    return (DATA_DIR / "notion_page.md").read_text(encoding="utf-8"), "fixture"
+
+
 def load_demo_context() -> dict[str, Any]:
-    notion_text = (DATA_DIR / "notion_page.md").read_text(encoding="utf-8")
+    notion_text, notion_source = load_team_guide_text()
     gitlab_activity = json.loads((DATA_DIR / "gitlab_activity.json").read_text(encoding="utf-8"))
     return {
         "team_guide": parse_team_guide(notion_text),
+        "team_guide_source": notion_source,
         "activity": gitlab_activity,
         "graph": build_influence_graph(gitlab_activity),
     }
