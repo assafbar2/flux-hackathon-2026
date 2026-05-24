@@ -1,0 +1,46 @@
+{
+  "merge_requests": [
+    {"area": "auth", "reviewer": "Marcus", "review_hours": 2, "path": "/auth"},
+    {"area": "auth", "reviewer": "Marcus", "review_hours": 2, "path": "/auth"},
+    {"area": "auth", "reviewer": "Marcus", "review_hours": 3, "path": "/auth"},
+    {"area": "auth", "reviewer": "Marcus", "review_hours": 1, "path": "/auth"},
+    {"area": "auth", "reviewer": "Marcus", "review_hours": 2, "path": "/auth"},
+    {"area": "auth", "reviewer": "Dev", "review_hours": 4, "path": "/auth"},
+    {"area": "auth", "reviewer": "Priya", "review_hours": 8, "path": "/auth"},
+    {"area": "infra", "reviewer": "Dev", "review_hours": 4, "path": "/infra"},
+    {"area": "infra", "reviewer": "Dev", "review_hours": 4, "path": "/infra"},
+    {"area": "infra", "reviewer": "Dev", "review_hours": 5, "path": "/infra"},
+    {"area": "billing", "reviewer": "Marcus", "review_hours": 2, "path": "/billing"}
+  ],
+  "issues": [
+    {
+      "id": "412",
+      "project": "billing",
+      "title": "Add invoice empty state",
+      "labels": ["good-first-issue"],
+      "assignee": null,
+      "state": "opened"
+    },
+    {
+      "id": "89",
+      "project": "notifications",
+      "title": "Add digest preview copy",
+      "labels": ["good-first-issue"],
+      "assignee": null,
+      "state": "opened"
+    },
+    {
+      "id": "88",
+      "project": "auth",
+      "title": "SSO migration blocked on Okta vendor response",
+      "labels": ["P1"],
+      "assignee": "Marcus",
+      "state": "opened"
+    }
+  ],
+  "high_churn_files": [
+    "auth/session.ts",
+    "billing/invoices.ts",
+    "infra/deploy.yml"
+  ]
+}
