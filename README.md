@@ -231,6 +231,7 @@ allUsers -> Cloud Run Invoker -> service flux
 
 - Demo script: `docs/DEMO_SCRIPT.md`
 - Handoff notes: `docs/HANDOFF.md`
+- Roadmap: `docs/ROADMAP.md`
 - Notion guide shape: see `backend/demo_data/notion_page.md`
 - GitLab demo issue flow: ask `Assign issue #412 to me`, then click `Confirm assignment`
 
