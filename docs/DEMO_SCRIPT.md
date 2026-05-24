@@ -4,10 +4,10 @@ Target length: 2:45 to 3:00.
 
 ## Setup Before Recording
 
-- Open the live app: https://flux-dpq2d26l7q-uc.a.run.app
+- Open the live app: https://flux-153593352872.us-central1.run.app
 - Open the GitLab issue list in another tab.
 - Keep the Notion team guide available if you want to show the HR-maintained source.
-- Use blank setup fields unless you specifically want to show the real token flow. Blank fields are safer for video.
+- Use blank setup fields unless you specifically want to show the token flow. Blank fields are safer for video because the deployed service already has Secret Manager configuration.
 - If issue `#412` is already assigned, unassign it before recording or say "Flux can assign it live" and show the confirmed result.
 
 ## The Story
@@ -37,7 +37,7 @@ Action:
 
 Say:
 
-> HR only needs a GitLab token and a Notion team guide URL. For this demo, the production service already has secure server-side configuration, so I can generate a new-hire link without putting secrets in the browser.
+> HR only needs a GitLab token and a Notion team guide URL. For this demo, the production service already has secure server-side configuration, so I can generate a new-hire link without putting secrets in the browser. Behind this page, Flux runs on Cloud Run and orchestrates Gemini through Google ADK with GitLab MCP tools.
 
 ### 0:40-1:15 — The Flux Brief
 
@@ -66,7 +66,7 @@ Who owns auth?
 
 Say:
 
-> Flux does not answer from the org chart. It cites GitLab review activity and the team guide.
+> Flux does not answer from the org chart. It cites GitLab MCP data and the team guide.
 
 Ask:
 
@@ -76,7 +76,7 @@ How do I ship fast?
 
 Say:
 
-> This combines reviewer behavior from GitLab with the team's written and unwritten shipping rules.
+> This combines live GitLab MCP data with the team's written and unwritten shipping rules.
 
 Ask:
 
@@ -105,7 +105,7 @@ Action:
 
 Say:
 
-> Flux moves beyond chat. It proposes a concrete first task, asks for confirmation, and then writes back to GitLab.
+> Flux moves beyond chat. It proposes a concrete first task, asks for confirmation, and then writes back to GitLab through the GitLab MCP server.
 
 ### 2:45-3:00 — Close
 
@@ -125,4 +125,4 @@ If Notion is slow:
 
 If asked about Agent Builder:
 
-> The current deployed build is in deterministic demo mode. The intended production architecture routes GitLab MCP and Notion tools through Google Cloud Agent Builder with Gemini 2.0 Flash as the reasoning layer.
+> The deployed build routes brief and chat generation through Google ADK with Gemini, and exposes GitLab through the official GitLab CLI MCP server. Gemini 2.0 Flash is configured as primary with a Gemini 2.5 Flash fallback because this project currently cannot access the 2.0 Flash model in the tested Vertex locations.

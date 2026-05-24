@@ -6,13 +6,13 @@ Flux is a Google Cloud Rapid Agent Hackathon project for onboarding engineers in
 
 ## Live Demo
 
-- App: https://flux-dpq2d26l7q-uc.a.run.app
-- Health check: https://flux-dpq2d26l7q-uc.a.run.app/api/health
+- App: https://flux-153593352872.us-central1.run.app
+- Health check: https://flux-153593352872.us-central1.run.app/api/health
 - Cloud Run service: `flux`
 - Region: `us-central1`
-- Current revision verified: `flux-00004-dfs`
+- Current revision verified: `flux-00008-8rd`
 
-The setup page can be used with blank fields for the hackathon demo. Blank values create a demo workspace using the deployed server-side configuration and deterministic fallback data where needed.
+The setup page can be used with blank fields for the hackathon demo. Blank values create a workspace that uses deployed server-side configuration for live Notion, GitLab MCP, and Gemini/ADK orchestration.
 
 ## What It Does
 
@@ -35,16 +35,18 @@ Implemented and verified:
 - Public Cloud Run deployment.
 - Secret Manager wiring for GitLab and Notion tokens.
 - Notion page ingestion with fixture fallback.
-- GitLab issue ingestion and confirmed assignment against a live GitLab project.
-- Deterministic influence graph and chat answers for a reliable demo.
+- GitLab issue ingestion through the official GitLab CLI MCP server (`glab mcp serve`).
+- Confirmed GitLab issue assignment through the MCP `glab_issue_update` tool.
+- Google ADK orchestration with Gemini configured as the reasoning layer.
 - Source attribution in the brief and chat.
 - Explicit action confirmation before any GitLab write.
 
 Important honesty for judges and reviewers:
 
-- `FLUX_AGENT_MODE=demo` is the current deployed mode.
-- Gemini 2.0 Flash and Agent Builder are the intended orchestration path, but the current judged demo uses deterministic synthesis for reliability.
-- `backend/services/gitlab_mcp.py` exposes MCP-shaped operations, but currently calls GitLab's HTTP API directly until the official GitLab MCP runtime is wired through Agent Builder.
+- `FLUX_AGENT_MODE=live` is the current deployed mode.
+- `GEMINI_MODEL=gemini-2.0-flash` is configured as the primary model, with `GEMINI_FALLBACK_MODEL=gemini-2.5-flash` because this Google Cloud project currently returns Vertex 404s for the Gemini 2.0 Flash model in the tested locations.
+- Agent orchestration uses Google ADK (`LlmAgent` + `Runner`) with a GitLab MCP toolset. The app is deployed on Cloud Run rather than Vertex AI Agent Engine.
+- Confirmed write actions are executed only after explicit user confirmation.
 
 ## Architecture
 
@@ -56,17 +58,18 @@ React setup page
 React onboarding page
   -> GET /api/brief/{workspace_id}
   -> Notion API or fixture guide
-  -> GitLab activity or fixture review graph
-  -> deterministic Flux Brief
+  -> GitLab MCP issue reads via glab mcp serve
+  -> Google ADK + Gemini synthesis
+  -> Flux Brief
 
 Chat
   -> POST /api/chat
-  -> grounded answer with sources
+  -> Google ADK + Gemini grounded answer with sources
   -> optional action proposal
 
 Confirmed action
   -> POST /api/action/confirm
-  -> GitLab assignment if live GitLab env vars are present
+  -> GitLab MCP glab_issue_update assignment if live GitLab env vars are present
 ```
 
 ## Repository Layout
@@ -75,7 +78,7 @@ Confirmed action
 backend/
   main.py                  FastAPI app and static frontend serving
   routes/                  setup, brief, chat, action confirmation
-  services/                Notion, GitLab, influence graph, demo intelligence
+  services/                ADK agent, Notion, GitLab MCP, influence graph, fallback intelligence
   demo_data/               deterministic fallback data
   tests/                   backend test suite
 
@@ -91,6 +94,12 @@ docs/
 ## Local Development
 
 Create `.env` from `.env.example` and fill values as needed. Tokens must stay in `.env` or Secret Manager, never in git.
+
+Install GitLab CLI locally before running live MCP mode:
+
+```bash
+brew install glab
+```
 
 Start the backend:
 
@@ -139,6 +148,8 @@ Container build path:
 docker build -t flux .
 ```
 
+This shell currently does not have Docker installed, so local container build verification may need to happen in Cloud Build.
+
 ## Cloud Run Deployment
 
 The deployed service uses Cloud Run source deployment and Secret Manager. Example command shape:
@@ -148,7 +159,7 @@ gcloud run deploy flux \
   --source . \
   --region us-central1 \
   --allow-unauthenticated \
-  --set-env-vars "GOOGLE_CLOUD_PROJECT=$GOOGLE_CLOUD_PROJECT,GEMINI_MODEL=$GEMINI_MODEL,GITLAB_USERNAME=$GITLAB_USERNAME,GITLAB_PROJECT_URL=$GITLAB_PROJECT_URL,NOTION_PAGE_URL=$NOTION_PAGE_URL,FLUX_AGENT_MODE=demo,FLUX_BASE_URL=$FLUX_BASE_URL" \
+  --set-env-vars "GOOGLE_CLOUD_PROJECT=$GOOGLE_CLOUD_PROJECT,GOOGLE_GENAI_USE_VERTEXAI=True,GOOGLE_CLOUD_LOCATION=us-central1,GEMINI_MODEL=gemini-2.0-flash,GEMINI_FALLBACK_MODEL=gemini-2.5-flash,GITLAB_USERNAME=$GITLAB_USERNAME,GITLAB_PROJECT_URL=$GITLAB_PROJECT_URL,NOTION_PAGE_URL=$NOTION_PAGE_URL,FLUX_AGENT_MODE=live,FLUX_BASE_URL=$FLUX_BASE_URL,GLAB_COMMAND=glab" \
   --set-secrets "GITLAB_TOKEN=flux-gitlab-token:latest,NOTION_TOKEN=flux-notion-token:latest"
 ```
 
@@ -172,4 +183,4 @@ allUsers -> Cloud Run Invoker -> service flux
 - MIT license remains present.
 - Demo video is under 3 minutes.
 - GitLab partner track is selected.
-- README explains what is live now and what remains planned.
+- README explains the live ADK, Gemini, GitLab MCP, Notion, and Cloud Run architecture.

@@ -10,7 +10,7 @@ def test_live_notion_text_is_used_when_available(monkeypatch):
             assert page_url == "https://notion.so/example-1234567890abcdef1234567890abcdef"
             return "## The Team (Real Talk)\n### Marcus\n- Available"
 
-    monkeypatch.setenv("NOTION_TOKEN", "ntn_demo")
+    monkeypatch.setenv("NOTION_TOKEN", "notion-token-placeholder")
     monkeypatch.setenv("NOTION_PAGE_URL", "https://notion.so/example-1234567890abcdef1234567890abcdef")
     monkeypatch.setattr(demo_intelligence, "NotionClient", FakeNotionClient)
 
@@ -28,7 +28,7 @@ def test_empty_live_notion_text_falls_back_to_fixture(monkeypatch):
         def fetch_page_markdown(self, page_url):
             return ""
 
-    monkeypatch.setenv("NOTION_TOKEN", "ntn_demo")
+    monkeypatch.setenv("NOTION_TOKEN", "notion-token-placeholder")
     monkeypatch.setenv("NOTION_PAGE_URL", "https://notion.so/example-1234567890abcdef1234567890abcdef")
     monkeypatch.setattr(demo_intelligence, "NotionClient", EmptyNotionClient)
 

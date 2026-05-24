@@ -10,6 +10,22 @@
 
 ---
 
+## Current Status Update (May 24, 2026)
+
+This plan has been implemented into a live Cloud Run service:
+
+- Live app: `https://flux-153593352872.us-central1.run.app`
+- Current revision: `flux-00008-8rd`
+- Runtime mode: `FLUX_AGENT_MODE=live`
+- Agent orchestration: Google ADK `LlmAgent` + `Runner` on Cloud Run, with Gemini as the reasoning layer.
+- Gemini config: `gemini-2.0-flash` primary, `gemini-2.5-flash` fallback because this project currently returns Vertex 404s for Gemini 2.0 Flash in tested locations.
+- GitLab integration: official GitLab CLI MCP server via `glab mcp serve`, using `glab_issue_list` for reads and `glab_issue_update` for confirmed assignment.
+- Notion integration: live Notion API reader with deterministic fallback.
+
+The older checklist below remains useful as execution history, but current source of truth is `README.md`, `docs/HANDOFF.md`, and the code.
+
+---
+
 ## Current Sources
 
 - Local requirements: `Google Hackathon - June 2026/AGENTS.md`
@@ -503,7 +519,7 @@ Tests should verify prompt strings mention the required brief sections, source c
 
 - [ ] **Step 5.3: Wire Gemini 2.0 Flash**
 
-Use `GEMINI_MODEL=gemini-2.0-flash`. Keep all Gemini access behind `agent_builder.py` so the app can swap between deterministic demo mode and live agent mode.
+Use `GEMINI_MODEL=gemini-2.0-flash` with `GEMINI_FALLBACK_MODEL=gemini-2.5-flash`. Keep all Gemini access behind `agent_builder.py` so the app can swap between deterministic fallback mode and live agent mode.
 
 - [ ] **Step 5.4: Register tools in Agent Builder**
 
@@ -514,11 +530,11 @@ Register GitLab MCP and Notion access as tools in Agent Builder. This is a hacka
 Support:
 
 ```dotenv
-FLUX_AGENT_MODE=demo
 FLUX_AGENT_MODE=live
+FLUX_AGENT_MODE=demo
 ```
 
-Demo mode uses deterministic fixtures. Live mode uses Agent Builder, GitLab MCP, Notion, and Gemini.
+Live mode uses Google ADK, GitLab MCP, Notion, and Gemini. Demo mode remains as deterministic fallback behavior.
 
 - [ ] **Step 5.6: Verify live and demo paths**
 
@@ -709,10 +725,10 @@ gcloud run deploy flux \
   --source . \
   --region us-central1 \
   --allow-unauthenticated \
-  --set-env-vars GOOGLE_CLOUD_PROJECT=flux-hackathon-2026,GEMINI_MODEL=gemini-2.0-flash,FLUX_AGENT_MODE=demo
+  --set-env-vars GOOGLE_CLOUD_PROJECT=direct-subject-497307-p8,GOOGLE_GENAI_USE_VERTEXAI=True,GOOGLE_CLOUD_LOCATION=us-central1,GEMINI_MODEL=gemini-2.0-flash,GEMINI_FALLBACK_MODEL=gemini-2.5-flash,FLUX_AGENT_MODE=live,GLAB_COMMAND=glab
 ```
 
-Switch `FLUX_AGENT_MODE=live` only after live Agent Builder, GitLab MCP, and Notion work reliably.
+Keep `FLUX_AGENT_MODE=live` for judging now that ADK, GitLab MCP, and Notion have been verified on Cloud Run.
 
 - [ ] **Step 8.5: Verify public URL**
 
@@ -747,7 +763,7 @@ Use this exact 3-minute structure:
 
 - [ ] **Step 9.2: Record demo video**
 
-Record in demo mode unless live integrations are fully stable. The product should visibly use the GitLab MCP and Agent Builder architecture in README and, if possible, live logs.
+Record in live mode. The product should visibly use the GitLab MCP and Agent Builder/ADK architecture in README and, if possible, live logs.
 
 - [ ] **Step 9.3: Create submission checklist**
 
@@ -786,7 +802,7 @@ git commit -m "docs: add flux submission assets"
 
 | Risk | Mitigation |
 |---|---|
-| Agent Builder setup takes longer than expected | Keep deterministic demo mode, but document and expose live integration path. |
+| Agent Builder/ADK setup regresses | Keep deterministic fallback mode, but record the current live ADK/MCP deployment first. |
 | GitLab MCP write action is hard to wire | Build the confirmation boundary first; use a test GitLab project and issue. |
 | Notion auth is flaky | Keep demo markdown fallback and show source label as demo/team guide. |
 | Cloud Run deployment eats time | Use a single service and deploy demo mode first. |
@@ -805,4 +821,3 @@ Flux is done for hackathon submission when:
 - README explains Google Cloud Agent Builder, Gemini 2.0 Flash, GitLab MCP, Notion, and Cloud Run setup.
 - Repo is public and MIT licensed.
 - Demo video is under 3 minutes.
-

@@ -10,7 +10,7 @@ def test_setup_returns_workspace_and_hire_link():
     response = client.post(
         "/api/setup",
         json={
-            "gitlab_token": "glpat-demo",
+            "gitlab_token": "demo-token",
             "notion_url": "https://notion.so/demo-page",
             "gitlab_username": "newhire",
         },
@@ -26,7 +26,7 @@ def test_brief_returns_four_flux_sections():
     setup = client.post(
         "/api/setup",
         json={
-            "gitlab_token": "glpat-demo",
+            "gitlab_token": "demo-token",
             "notion_url": "https://notion.so/demo-page",
             "gitlab_username": "newhire",
         },
@@ -45,7 +45,7 @@ def test_chat_returns_answer_with_sources():
     setup = client.post(
         "/api/setup",
         json={
-            "gitlab_token": "glpat-demo",
+            "gitlab_token": "demo-token",
             "notion_url": "https://notion.so/demo-page",
             "gitlab_username": "newhire",
         },

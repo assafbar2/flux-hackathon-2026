@@ -1,9 +1,23 @@
+import asyncio
 import os
 import re
 import urllib.parse
-from typing import Any
+from dataclasses import dataclass
+from typing import Any, Protocol
 
-import httpx
+from mcp import ClientSession, StdioServerParameters
+from mcp.client.stdio import stdio_client
+
+
+ISSUE_LINE_RE = re.compile(r"^#(?P<iid>\d+)\t(?P<title>[^\t]+)\t(?P<labels>[^\t]*)\t")
+
+
+class McpToolClient(Protocol):
+    def call_tool(self, name: str, arguments: dict[str, Any]) -> str:
+        ...
+
+    def list_tool_names(self) -> list[str]:
+        ...
 
 
 def normalize_demo_issue(issue: dict[str, Any]) -> dict[str, Any]:
@@ -17,29 +31,103 @@ def normalize_demo_issue(issue: dict[str, Any]) -> dict[str, Any]:
         "project": project,
         "title": issue.get("title", ""),
         "labels": issue.get("labels", []),
-        "assignee": assignees[0]["username"] if assignees else None,
+        "assignee": assignees[0]["username"] if assignees else issue.get("assignee"),
         "state": issue.get("state", "opened"),
         "web_url": issue.get("web_url"),
     }
 
 
-class GitLabMcpClient:
-    """Thin GitLab tool adapter.
+def parse_issue_list(text: str, project_url: str) -> list[dict[str, Any]]:
+    issues: list[dict[str, Any]] = []
+    base_url = project_url.rstrip()
+    for line in text.splitlines():
+        match = ISSUE_LINE_RE.match(line)
+        if not match:
+            continue
+        labels = [
+            label.strip()
+            for label in match.group("labels").strip("()").split(",")
+            if label.strip()
+        ]
+        issue = normalize_demo_issue(
+            {
+                "iid": int(match.group("iid")),
+                "title": match.group("title"),
+                "labels": labels,
+                "state": "opened",
+                "assignees": [],
+                "web_url": f"{base_url}/-/issues/{match.group('iid')}",
+            }
+        )
+        issues.append(issue)
+    return sorted(issues, key=lambda issue: str(issue["id"]))
 
-    The public methods match the MCP operations Flux needs, while this first
-    implementation talks to GitLab's HTTP API until the Agent Builder MCP
-    runtime is wired in.
-    """
+
+def _run_async(coro):
+    try:
+        asyncio.get_running_loop()
+    except RuntimeError:
+        return asyncio.run(coro)
+    raise RuntimeError("GitLab MCP synchronous client cannot run inside an active event loop")
+
+
+@dataclass
+class GlabMcpToolClient:
+    token: str
+    command: str = "glab"
+
+    def list_tool_names(self) -> list[str]:
+        return _run_async(self._list_tool_names())
+
+    def call_tool(self, name: str, arguments: dict[str, Any]) -> str:
+        return _run_async(self._call_tool(name, arguments))
+
+    def _env(self) -> dict[str, str]:
+        env = os.environ.copy()
+        env["GITLAB_TOKEN"] = self.token
+        return env
+
+    async def _list_tool_names(self) -> list[str]:
+        params = StdioServerParameters(
+            command=self.command,
+            args=["mcp", "serve"],
+            env=self._env(),
+        )
+        async with stdio_client(params) as (read, write):
+            async with ClientSession(read, write) as session:
+                await session.initialize()
+                result = await session.list_tools()
+                return [tool.name for tool in result.tools]
+
+    async def _call_tool(self, name: str, arguments: dict[str, Any]) -> str:
+        params = StdioServerParameters(
+            command=self.command,
+            args=["mcp", "serve"],
+            env=self._env(),
+        )
+        async with stdio_client(params) as (read, write):
+            async with ClientSession(read, write) as session:
+                await session.initialize()
+                result = await session.call_tool(name, arguments)
+                return "\n".join(
+                    getattr(block, "text", "")
+                    for block in result.content
+                    if getattr(block, "text", "")
+                )
+
+
+class GitLabMcpClient:
+    """GitLab integration backed by the official `glab mcp serve` server."""
 
     def __init__(
         self,
         token: str | None = None,
         project_url: str | None = None,
-        http_client: httpx.Client | None = None,
+        mcp_client: McpToolClient | None = None,
     ) -> None:
         self.token = token or os.getenv("GITLAB_TOKEN", "")
         self.project_url = (project_url or os.getenv("GITLAB_PROJECT_URL", "")).rstrip("/")
-        self.http = http_client or httpx.Client(timeout=20)
+        self.mcp_client = mcp_client or GlabMcpToolClient(self.token)
 
     @property
     def project_path(self) -> str:
@@ -49,60 +137,46 @@ class GitLabMcpClient:
     def encoded_project_path(self) -> str:
         return urllib.parse.quote(self.project_path, safe="")
 
-    @property
-    def base_url(self) -> str:
-        return f"https://gitlab.com/api/v4/projects/{self.encoded_project_path}"
-
-    def _headers(self) -> dict[str, str]:
-        return {"PRIVATE-TOKEN": self.token}
-
     def list_issues(self) -> list[dict[str, Any]]:
-        response = self.http.get(
-            f"{self.base_url}/issues",
-            headers=self._headers(),
-            params={"per_page": 100},
+        output = self.mcp_client.call_tool(
+            "glab_issue_list",
+            {
+                "flags": {
+                    "repo": self.project_path,
+                    "output": "text",
+                    "per_page": 100,
+                },
+                "limit": 20000,
+            },
         )
-        response.raise_for_status()
-        return response.json()
+        return parse_issue_list(output, self.project_url)
 
     def fetch_demo_activity(self) -> dict[str, Any]:
         return {
-            "issues": [normalize_demo_issue(issue) for issue in self.list_issues()],
+            "issues": self.list_issues(),
+            "merge_requests": [],
+            "mcp_tools": self.mcp_client.list_tool_names(),
         }
 
     def find_issue_by_demo_id(self, project: str, issue_id: str) -> dict[str, Any]:
-        marker = f"[{project}/#{issue_id}]"
         for issue in self.list_issues():
-            if marker in issue.get("title", ""):
+            if issue["project"] == project and str(issue["id"]) == str(issue_id):
                 return issue
         raise ValueError(f"No GitLab issue found for {project}/#{issue_id}")
 
-    def find_user_id(self, username: str) -> int:
-        response = self.http.get(
-            "https://gitlab.com/api/v4/users",
-            headers=self._headers(),
-            params={"username": username},
-        )
-        response.raise_for_status()
-        users = response.json()
-        if not users:
-            raise ValueError(f"No GitLab user found for {username}")
-        return int(users[0]["id"])
-
-    def assign_issue(self, issue_iid: int, username: str) -> dict[str, Any]:
-        user_id = self.find_user_id(username)
-        response = self.http.put(
-            f"{self.base_url}/issues/{issue_iid}",
-            headers=self._headers(),
-            data={"assignee_ids": [user_id]},
-        )
-        response.raise_for_status()
-        return response.json()
-
     def assign_demo_issue(self, *, project: str, issue_id: str, username: str) -> dict[str, Any]:
         issue = self.find_issue_by_demo_id(project, issue_id)
-        assigned = self.assign_issue(int(issue["iid"]), username)
+        issue_url = issue["web_url"] or f"{self.project_url}/-/issues/{issue['iid']}"
+        self.mcp_client.call_tool(
+            "glab_issue_update",
+            {
+                "args": [issue_url],
+                "flags": {"assignee": [username]},
+                "limit": 20000,
+            },
+        )
         return {
-            "iid": assigned["iid"],
-            "gitlab_url": assigned["web_url"],
+            "iid": issue["iid"],
+            "gitlab_url": issue_url,
+            "mcp_tool": "glab_issue_update",
         }

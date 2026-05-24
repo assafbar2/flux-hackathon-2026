@@ -14,7 +14,7 @@ def test_confirm_assign_issue_returns_success_without_chat_side_effect(monkeypat
     setup = client.post(
         "/api/setup",
         json={
-            "gitlab_token": "glpat-demo",
+            "gitlab_token": "demo-token",
             "notion_url": "https://notion.so/demo-page",
             "gitlab_username": "newhire",
         },
@@ -61,7 +61,7 @@ def test_confirm_assign_issue_uses_live_gitlab_when_configured(monkeypatch):
     setup = client.post(
         "/api/setup",
         json={
-            "gitlab_token": "glpat-demo",
+            "gitlab_token": "demo-token",
             "notion_url": "https://notion.so/demo-page",
             "gitlab_username": "assafbar",
         },
@@ -101,7 +101,7 @@ def test_confirm_assign_issue_replaces_placeholder_username_with_config(monkeypa
     setup = client.post(
         "/api/setup",
         json={
-            "gitlab_token": "glpat-demo",
+            "gitlab_token": "demo-token",
             "notion_url": "https://notion.so/demo-page",
             "gitlab_username": "newhire",
         },

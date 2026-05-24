@@ -39,7 +39,7 @@ export function SetupPage() {
       <form className="panel setup-form" onSubmit={submit}>
         <label>
           GitLab token
-          <input value={gitlabToken} onChange={(event) => setGitlabToken(event.target.value)} placeholder="glpat-..." />
+          <input value={gitlabToken} onChange={(event) => setGitlabToken(event.target.value)} placeholder="GitLab token" />
         </label>
         <label>
           GitLab username

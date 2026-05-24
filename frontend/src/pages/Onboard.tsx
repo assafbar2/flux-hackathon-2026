@@ -82,7 +82,7 @@ export function OnboardPage({ workspaceId }: OnboardPageProps) {
         </div>
         <div className="status">
           <ShieldCheck size={16} aria-hidden="true" />
-          Demo mode
+          Live ADK + MCP
         </div>
       </header>
       {loading ? (

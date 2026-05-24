@@ -1,7 +1,7 @@
 from fastapi import APIRouter, HTTPException
 from pydantic import BaseModel
 
-from services.demo_intelligence import answer_demo_question
+from services.agent_builder import answer_flux_question
 from services.store import store
 
 
@@ -25,4 +25,4 @@ def chat(payload: ChatRequest) -> ChatResponse:
     if workspace is None:
         raise HTTPException(status_code=404, detail="Workspace not found")
 
-    return ChatResponse(**answer_demo_question(payload.message, workspace.gitlab_username))
+    return ChatResponse(**answer_flux_question(payload.message, workspace.gitlab_username))

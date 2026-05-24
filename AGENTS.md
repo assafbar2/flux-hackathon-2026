@@ -10,14 +10,14 @@ Read this entire file before writing a single line of code. Everything you need 
 
 Read this before using the rest of this file as a plan.
 
-- Live app: https://flux-dpq2d26l7q-uc.a.run.app
+- Live app: https://flux-153593352872.us-central1.run.app
 - Cloud Run service: `flux`, region `us-central1`, project `direct-subject-497307-p8`
-- Current deployed mode: `FLUX_AGENT_MODE=demo`
+- Current deployed mode: `FLUX_AGENT_MODE=live`
 - Public access is enabled with `allUsers -> Cloud Run Invoker` on the `flux` service.
 - Notion ingestion is live when configured and falls back to `backend/demo_data/notion_page.md`.
-- GitLab issue reads and confirmed assignment are live when configured.
-- The GitLab adapter is MCP-shaped but currently uses GitLab HTTP API calls until Agent Builder plus the official GitLab MCP server are wired.
-- Gemini 2.0 Flash / Agent Builder remain the intended orchestration path, not the current deployed synthesis path.
+- GitLab issue reads and confirmed assignment are live through the official GitLab CLI MCP server (`glab mcp serve`).
+- Brief and chat synthesis route through Google ADK (`LlmAgent` + `Runner`) with Gemini.
+- `GEMINI_MODEL=gemini-2.0-flash` is configured as primary with `GEMINI_FALLBACK_MODEL=gemini-2.5-flash` because this project currently returns Vertex 404s for Gemini 2.0 Flash in tested locations.
 - Judge-facing docs live in `README.md`, `docs/DEMO_SCRIPT.md`, and `docs/HANDOFF.md`.
 
 The rest of this file is the product and architecture target. Treat any conflicts in favor of the current status above plus the latest code.

@@ -10,7 +10,7 @@ def create_workspace() -> str:
     response = client.post(
         "/api/setup",
         json={
-            "gitlab_token": "glpat-demo",
+            "gitlab_token": "demo-token",
             "notion_url": "https://notion.so/demo-page",
             "gitlab_username": "newhire",
         },

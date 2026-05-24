@@ -1,7 +1,7 @@
 from fastapi import APIRouter, HTTPException
 from pydantic import BaseModel
 
-from services.demo_intelligence import build_demo_brief
+from services.agent_builder import build_flux_brief
 from services.store import store
 
 
@@ -24,4 +24,4 @@ def get_brief(workspace_id: str) -> BriefResponse:
     if store.get(workspace_id) is None:
         raise HTTPException(status_code=404, detail="Workspace not found")
 
-    return BriefResponse(workspace_id=workspace_id, brief=build_demo_brief())
+    return BriefResponse(workspace_id=workspace_id, brief=build_flux_brief())
