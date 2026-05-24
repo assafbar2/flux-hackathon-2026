@@ -68,7 +68,7 @@ Flux proposes a first real task and only writes to GitLab after confirmation.
 - Health check: https://flux-153593352872.us-central1.run.app/api/health
 - Cloud Run service: `flux`
 - Region: `us-central1`
-- Current revision verified: `flux-00009-gtn`
+- Current revision verified: `flux-00010-vr5`
 
 The setup page can be used with blank fields for the hackathon demo. Blank values create a workspace that uses deployed server-side configuration for live Notion, GitLab MCP, and Gemini/ADK orchestration.
 
