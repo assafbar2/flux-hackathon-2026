@@ -15,7 +15,7 @@
 This plan has been implemented into a live Cloud Run service:
 
 - Live app: `https://flux-153593352872.us-central1.run.app`
-- Current revision: `flux-00010-vr5`
+- Current revision: `flux-00012-n47`
 - Runtime mode: `FLUX_AGENT_MODE=live`
 - Agent orchestration: Google ADK `LlmAgent` + `Runner` on Cloud Run, with Gemini as the reasoning layer.
 - Gemini config: `gemini-2.0-flash` primary, `gemini-2.5-flash` fallback because this project currently returns Vertex 404s for Gemini 2.0 Flash in tested locations.
