@@ -51,6 +51,28 @@ export function OnboardPage({ workspaceId }: OnboardPageProps) {
     ]);
   }
 
+  async function confirmAction(messageIndex: number) {
+    const message = messages[messageIndex];
+    if (!message.action) return;
+
+    const response = await fetch("/api/action/confirm", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ workspace_id: workspaceId, action: message.action })
+    });
+    const payload = await response.json();
+    setMessages((current) =>
+      current.map((item, index) =>
+        index === messageIndex
+          ? {
+              ...item,
+              actionResult: payload.success ? `${payload.message} ${payload.gitlab_url}` : "Assignment failed."
+            }
+          : item
+      )
+    );
+  }
+
   return (
     <main className="workspace">
       <header className="topbar">
@@ -71,7 +93,13 @@ export function OnboardPage({ workspaceId }: OnboardPageProps) {
       ) : (
         <FluxBrief sections={sections} />
       )}
-      <Chat input={input} messages={messages} onInputChange={setInput} onSend={(message) => void send(message)} />
+      <Chat
+        input={input}
+        messages={messages}
+        onInputChange={setInput}
+        onSend={(message) => void send(message)}
+        onConfirmAction={(messageIndex) => void confirmAction(messageIndex)}
+      />
     </main>
   );
 }

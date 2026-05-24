@@ -261,6 +261,15 @@ input {
   padding: 0 12px;
 }
 
+.action-result {
+  margin: 12px 0 0;
+  padding: 10px 12px;
+  border-radius: 6px;
+  color: #143c37;
+  background: #e4ece1;
+  overflow-wrap: anywhere;
+}
+
 .chat-input {
   display: grid;
   grid-template-columns: minmax(0, 1fr) 110px;

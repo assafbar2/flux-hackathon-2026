@@ -16,4 +16,5 @@ export type ChatMessage = {
   body: string;
   sources?: string[];
   action?: ChatAction;
+  actionResult?: string;
 };

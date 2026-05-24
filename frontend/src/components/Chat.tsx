@@ -7,6 +7,7 @@ type ChatProps = {
   messages: ChatMessage[];
   onInputChange: (value: string) => void;
   onSend: (message?: string) => void;
+  onConfirmAction: (messageIndex: number) => void;
 };
 
 const demoQuestions = [
@@ -16,7 +17,7 @@ const demoQuestions = [
   "Assign issue #412 to me"
 ];
 
-export function Chat({ input, messages, onInputChange, onSend }: ChatProps) {
+export function Chat({ input, messages, onInputChange, onSend, onConfirmAction }: ChatProps) {
   return (
     <section className="chat-panel">
       <div className="question-row">
@@ -31,12 +32,13 @@ export function Chat({ input, messages, onInputChange, onSend }: ChatProps) {
           <div className={`message ${message.role}`} key={`${message.role}-${index}`}>
             <p>{message.body}</p>
             <SourceChips sources={message.sources} />
-            {message.action && (
-              <button type="button" className="confirm">
+            {message.action && !message.actionResult && (
+              <button type="button" className="confirm" onClick={() => onConfirmAction(index)}>
                 <GitPullRequestArrow size={16} aria-hidden="true" />
                 Confirm assignment
               </button>
             )}
+            {message.actionResult && <p className="action-result">{message.actionResult}</p>}
           </div>
         ))}
       </div>

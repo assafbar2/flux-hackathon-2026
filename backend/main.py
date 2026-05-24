@@ -1,7 +1,7 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
-from routes import brief, chat, setup
+from routes import action, brief, chat, setup
 
 
 app = FastAPI(title="Flux API")
@@ -20,6 +20,7 @@ app.add_middleware(
 app.include_router(setup.router, prefix="/api")
 app.include_router(brief.router, prefix="/api")
 app.include_router(chat.router, prefix="/api")
+app.include_router(action.router, prefix="/api")
 
 
 @app.get("/api/health")
