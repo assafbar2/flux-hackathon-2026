@@ -3,6 +3,7 @@ import os
 from pathlib import Path
 from typing import Any
 
+from services.gitlab_mcp import GitLabMcpClient
 from services.influence_graph import build_influence_graph
 from services.notion import NotionClient
 from services.notion_parser import parse_team_guide
@@ -25,9 +26,21 @@ def load_team_guide_text() -> tuple[str, str]:
     return (DATA_DIR / "notion_page.md").read_text(encoding="utf-8"), "fixture"
 
 
+def load_gitlab_activity() -> dict[str, Any]:
+    fixture_activity = json.loads((DATA_DIR / "gitlab_activity.json").read_text(encoding="utf-8"))
+    if os.getenv("GITLAB_TOKEN") and os.getenv("GITLAB_PROJECT_URL"):
+        try:
+            live_activity = GitLabMcpClient().fetch_demo_activity()
+        except Exception:
+            live_activity = {}
+        if live_activity.get("issues"):
+            fixture_activity["issues"] = live_activity["issues"]
+    return fixture_activity
+
+
 def load_demo_context() -> dict[str, Any]:
     notion_text, notion_source = load_team_guide_text()
-    gitlab_activity = json.loads((DATA_DIR / "gitlab_activity.json").read_text(encoding="utf-8"))
+    gitlab_activity = load_gitlab_activity()
     return {
         "team_guide": parse_team_guide(notion_text),
         "team_guide_source": notion_source,

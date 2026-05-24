@@ -36,3 +36,40 @@ def test_empty_live_notion_text_falls_back_to_fixture(monkeypatch):
 
     assert source == "fixture"
     assert "The Team (Real Talk)" in text
+
+
+def test_live_gitlab_issues_replace_fixture_issues(monkeypatch):
+    class FakeGitLabClient:
+        def fetch_demo_activity(self):
+            return {
+                "issues": [
+                    {
+                        "id": "412",
+                        "iid": 1,
+                        "project": "billing",
+                        "title": "[billing/#412] Add invoice empty state",
+                        "labels": ["good-first-issue"],
+                        "assignee": None,
+                        "state": "opened",
+                    }
+                ]
+            }
+
+    monkeypatch.setenv("GITLAB_TOKEN", "token")
+    monkeypatch.setenv("GITLAB_PROJECT_URL", "https://gitlab.com/group/project")
+    monkeypatch.setattr(demo_intelligence, "GitLabMcpClient", FakeGitLabClient)
+
+    activity = demo_intelligence.load_gitlab_activity()
+
+    assert activity["issues"] == [
+        {
+            "id": "412",
+            "iid": 1,
+            "project": "billing",
+            "title": "[billing/#412] Add invoice empty state",
+            "labels": ["good-first-issue"],
+            "assignee": None,
+            "state": "opened",
+        }
+    ]
+    assert activity["merge_requests"]
