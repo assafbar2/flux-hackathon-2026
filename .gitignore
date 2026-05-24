@@ -9,3 +9,5 @@ dist/
 frontend/dist/
 .DS_Store
 *.log
+.runlogs/
+.gstack/
