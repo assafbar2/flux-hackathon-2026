@@ -1,5 +1,6 @@
 from fastapi.testclient import TestClient
 
+import main
 from main import app
 
 
@@ -87,3 +88,15 @@ def test_health_returns_mode_and_version(monkeypatch):
         "mode": "live",
         "version": "1.0.0",
     }
+
+
+def test_favicon_serves_svg_from_static_dir(monkeypatch, tmp_path):
+    favicon = tmp_path / "favicon.svg"
+    favicon.write_text("<svg aria-label=\"Flux\"></svg>", encoding="utf-8")
+    monkeypatch.setattr(main, "STATIC_DIR", tmp_path)
+
+    response = client.get("/favicon.svg")
+
+    assert response.status_code == 200
+    assert response.headers["content-type"].startswith("image/svg+xml")
+    assert "aria-label=\"Flux\"" in response.text

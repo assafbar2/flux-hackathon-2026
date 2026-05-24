@@ -47,6 +47,17 @@ if ASSETS_DIR.exists():
     app.mount("/assets", StaticFiles(directory=ASSETS_DIR), name="assets")
 
 
+@app.get("/favicon.svg")
+def serve_favicon() -> FileResponse:
+    favicon_file = STATIC_DIR / "favicon.svg"
+    if favicon_file.exists():
+        return FileResponse(favicon_file, media_type="image/svg+xml")
+    index_file = STATIC_DIR / "index.html"
+    if index_file.exists():
+        return FileResponse(index_file)
+    return FileResponse(__file__, media_type="text/plain")
+
+
 @app.get("/{path:path}")
 def serve_frontend(path: str) -> FileResponse:
     index_file = STATIC_DIR / "index.html"
