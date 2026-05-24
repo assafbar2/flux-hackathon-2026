@@ -4,6 +4,12 @@ The org as it runs, not as it is drawn.
 
 Flux is a Google Cloud Rapid Agent Hackathon project for onboarding engineers into GitLab-based teams. It reads GitLab activity and an HR-maintained Notion guide, generates a day-one brief, answers grounded onboarding questions, and can assign a first GitLab issue after explicit confirmation.
 
+## Why The Name
+
+The org is always in flux. The org chart is a snapshot that is already stale the moment it is printed. Flux reads what is actually moving: commits, reviews, PRs, who is on leave, and what is on fire, then surfaces the living state of the team instead of the frozen official version.
+
+It works on a second level too: a new hire is in flux. Week one is disorienting, and Flux meets them there with real intelligence instead of another static PDF.
+
 ## Why Flux Exists
 
 Onboarding today is mostly a static promise: a PDF, a wiki page, a few links, and a manager saying "just ask around." That material is usually stale before the new hire reads it. It describes the official org chart, but not the real operating system of the company: who actually reviews auth, which migration is politically sensitive, who is on leave, which Slack channels are performative, and which first task is safe.
