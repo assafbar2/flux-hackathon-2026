@@ -10,7 +10,7 @@ Flux is a Google Cloud Rapid Agent Hackathon project for onboarding engineers in
 - Health check: https://flux-153593352872.us-central1.run.app/api/health
 - Cloud Run service: `flux`
 - Region: `us-central1`
-- Current revision verified: `flux-00008-8rd`
+- Current revision verified: `flux-00009-gtn`
 
 The setup page can be used with blank fields for the hackathon demo. Blank values create a workspace that uses deployed server-side configuration for live Notion, GitLab MCP, and Gemini/ADK orchestration.
 

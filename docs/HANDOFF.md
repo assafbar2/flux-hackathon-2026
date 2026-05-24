@@ -16,7 +16,7 @@ This file is for moving the project to Claude Code or another coding agent witho
 
 ## Current Deployment
 
-- Latest verified revision: `flux-00008-8rd`
+- Latest verified revision: `flux-00009-gtn`
 - Public health check verified: `GET /api/health` returns `{"status":"ok"}`
 - Required public IAM binding is in place:
 
