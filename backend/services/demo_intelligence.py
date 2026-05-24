@@ -58,22 +58,43 @@ def build_demo_brief() -> dict[str, dict[str, Any]]:
     return {
         "now": {
             "title": "Right Now",
-            "body": f"{fire['title']}. Marcus owns it and is blocked on an Okta vendor response. Do not touch the auth module this week.",
+            "body": (
+                f"SSO migration P1: {fire['title']}. Marcus owns it, it is blocked on "
+                "an Okta vendor response, and the ETA is still unknown. Do not touch /auth "
+                "or auth/session.ts this week unless Marcus explicitly asks."
+            ),
             "sources": ["GitLab activity", "Team guide"],
         },
         "people": {
             "title": "Your People Map",
-            "body": f"{auth_owner['owner']} is the de facto auth owner: he reviewed {int(auth_owner['review_share'] * 100)}% of auth PRs in the last 90 days. Dev owns infra and CI/CD. Sarah is on leave until June 15, 2026.",
+            "body": (
+                f"{auth_owner['owner']} is the de facto auth owner: Marcus reviewed "
+                f"{int(auth_owner['review_share'] * 100)}% of auth PRs in the last 90 days "
+                "and also owns payments edge cases. Sarah is on parental leave until June 15, "
+                "2026, so route architecture questions to Dev. Priya is 80% focused on the "
+                "enterprise migration and is best for roadmap/context in Thursday 1:1s. "
+                "Dev owns infra/CI, deploys, staging, and urgent pipeline failures."
+            ),
             "sources": ["GitLab activity", "Team guide"],
         },
         "moves": {
             "title": "Week 1 Moves",
-            "body": f"Start in billing or notifications. Billing issue #{issue['id']} is unassigned with a clear spec, and notifications issue #89 is small and well-scoped.",
+            "body": (
+                f"Start in the billing module safe zone. billing/#{issue['id']} has no assignee "
+                "and a clear spec, so it is the strongest first PR. notifications/#89 is also "
+                "small and well-scoped. Avoid auth work until the SSO migration clears."
+            ),
             "sources": ["GitLab activity", "Team guide"],
         },
         "landmines": {
             "title": "Landmines",
-            "body": "Do not ask why the team did not use GraphQL in public. Friday deploys require explicit +1 from Marcus or Dev. Tuesday standup is performative.",
+            "body": (
+                "Do not ask why the team did not use GraphQL in public, and do not reopen the "
+                "v1 to v2 API migration debate in standup. Friday deploys require explicit +1 "
+                "from Marcus or Dev. #eng-general is read by the CEO and investors; use #eng-real "
+                "for messy technical details. PR template is mandatory, and Tuesday standup is "
+                "performative because the real sync is Thursday retro."
+            ),
             "sources": ["Team guide"],
         },
     }
@@ -106,35 +127,35 @@ def answer_demo_question(message: str, gitlab_username: str | None) -> dict[str,
 
     if "avoid" in normalized or "ping" in normalized:
         return {
-            "answer": "Avoid pinging Sarah until June 15, 2026 because the team guide says she is on parental leave. Priya is also limited because she is 80% focused on the enterprise migration; go to Marcus for new-hire unblocking.",
+            "answer": "Per the team guide, avoid pinging Sarah until June 15, 2026 because she is on parental leave. Priya is also limited because she is 80% focused on the enterprise migration; go to Marcus for new-hire unblocking.",
             "sources": ["Team guide", "GitLab activity"],
             "action": None,
         }
 
     if "work on" in normalized or "week 1" in normalized or "impact" in normalized:
         return {
-            "answer": "For week 1, start with billing issue #412 or notifications issue #89. The team guide marks billing and notifications as safe zones, and GitLab shows both as open good-first issues.",
+            "answer": "Based on GitLab activity and per the team guide, start with billing issue #412 or notifications issue #89. Billing is a safe zone, #412 has no assignee and a clear spec, and notifications/#89 is small and well-scoped.",
             "sources": ["GitLab activity", "Team guide"],
             "action": None,
         }
 
     if "standup" in normalized or "shouldn't say" in normalized or "sensitive" in normalized:
         return {
-            "answer": "Do not bring up GraphQL history in public, and avoid relitigating the v1 to v2 API migration. Per the team guide, Tuesday standup is recorded on Loom, so keep sensitive technical debate out of that forum.",
+            "answer": "Per the team guide, do not bring up GraphQL history in public, and avoid relitigating the v1 to v2 API migration. Tuesday standup is recorded on Loom, so keep sensitive technical debate out of that forum.",
             "sources": ["Team guide"],
             "action": None,
         }
 
     if "merged fast" in normalized or "ship" in normalized or "pr" in normalized:
         return {
-            "answer": "Use the PR template, tag Marcus for auth or payments, and tag Dev for infra or backend. Marcus averages about 2 hours for auth/payments reviews, but Friday deploys still require explicit +1 from Marcus or Dev.",
+            "answer": "Based on GitLab activity and per the team guide, use the PR template, tag Marcus for auth or payments, and tag Dev for infra or backend. Marcus averages about 2 hours for auth/payments reviews, but Friday deploys still require explicit +1 from Marcus or Dev.",
             "sources": ["GitLab activity", "Team guide"],
             "action": None,
         }
 
     if "meetings" in normalized or "matter" in normalized:
         return {
-            "answer": "Thursday's eng retro is the meeting that actually matters for team sync. Tuesday standup is performative and recorded on Loom; Priya's Thursday 1:1 is the right venue for strategic issues.",
+            "answer": "Per the team guide, Thursday's eng retro is the meeting that actually matters for team sync. Tuesday standup is performative and recorded on Loom; Priya's Thursday 1:1 is the right venue for strategic issues.",
             "sources": ["Team guide"],
             "action": None,
         }
@@ -142,13 +163,13 @@ def answer_demo_question(message: str, gitlab_username: str | None) -> dict[str,
     if "understand" in normalized or "codebase" in normalized:
         files = ", ".join(context["activity"]["high_churn_files"])
         return {
-            "answer": f"Start with the highest-churn files: {files}. Then talk to Marcus for auth and billing context, and Dev for infra/deploy context.",
+            "answer": f"Based on GitLab activity, start with the highest-churn files: {files}. Then talk to Marcus for auth and billing context, and Dev for infra/deploy context.",
             "sources": ["GitLab activity", "Team guide"],
             "action": None,
         }
 
     return {
-        "answer": "Start in billing or notifications. The team guide marks both as safe zones, and GitLab shows billing issue #412 and notifications issue #89 as good first tasks.",
+        "answer": "Based on GitLab activity and per the team guide, start in billing or notifications. The team guide marks both as safe zones, and GitLab shows billing issue #412 and notifications issue #89 as good first tasks.",
         "sources": ["GitLab activity", "Team guide"],
         "action": None,
     }

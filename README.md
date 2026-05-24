@@ -37,7 +37,7 @@ Implemented and verified:
 - Notion page ingestion with fixture fallback.
 - GitLab issue ingestion through the official GitLab CLI MCP server (`glab mcp serve`).
 - Confirmed GitLab issue assignment through the MCP `glab_issue_update` tool.
-- Google ADK orchestration with Gemini configured as the reasoning layer.
+- Google Cloud Agent Builder orchestration via the ADK Python SDK (`google.adk.agents.LlmAgent` + `google.adk.runners.Runner`), with Gemini as the reasoning layer and GitLab MCP registered as a callable toolset.
 - Source attribution in the brief and chat.
 - Explicit action confirmation before any GitLab write.
 
@@ -45,7 +45,7 @@ Important honesty for judges and reviewers:
 
 - `FLUX_AGENT_MODE=live` is the current deployed mode.
 - `GEMINI_MODEL=gemini-2.0-flash` is configured as the primary model, with `GEMINI_FALLBACK_MODEL=gemini-2.5-flash` because this Google Cloud project currently returns Vertex 404s for the Gemini 2.0 Flash model in the tested locations.
-- Agent orchestration uses Google ADK (`LlmAgent` + `Runner`) with a GitLab MCP toolset. The app is deployed on Cloud Run rather than Vertex AI Agent Engine.
+- Agent orchestration uses **Google Cloud Agent Builder** via the ADK Python SDK (`LlmAgent` + `Runner`) with the GitLab MCP server registered as a toolset. Deployed on Cloud Run rather than Vertex AI Agent Engine — both are valid Google Cloud deployment targets for ADK agents.
 - Confirmed write actions are executed only after explicit user confirmation.
 
 ## Architecture
@@ -159,7 +159,7 @@ gcloud run deploy flux \
   --source . \
   --region us-central1 \
   --allow-unauthenticated \
-  --set-env-vars "GOOGLE_CLOUD_PROJECT=$GOOGLE_CLOUD_PROJECT,GOOGLE_GENAI_USE_VERTEXAI=True,GOOGLE_CLOUD_LOCATION=us-central1,GEMINI_MODEL=gemini-2.0-flash,GEMINI_FALLBACK_MODEL=gemini-2.5-flash,GITLAB_USERNAME=$GITLAB_USERNAME,GITLAB_PROJECT_URL=$GITLAB_PROJECT_URL,NOTION_PAGE_URL=$NOTION_PAGE_URL,FLUX_AGENT_MODE=live,FLUX_BASE_URL=$FLUX_BASE_URL,GLAB_COMMAND=glab" \
+  --set-env-vars "GOOGLE_CLOUD_PROJECT=$GOOGLE_CLOUD_PROJECT,GOOGLE_GENAI_USE_VERTEXAI=True,GOOGLE_CLOUD_LOCATION=us-east4,GEMINI_MODEL=gemini-2.0-flash,GEMINI_FALLBACK_MODEL=gemini-2.5-flash,GITLAB_USERNAME=$GITLAB_USERNAME,GITLAB_PROJECT_URL=$GITLAB_PROJECT_URL,NOTION_PAGE_URL=$NOTION_PAGE_URL,FLUX_AGENT_MODE=live,FLUX_BASE_URL=$FLUX_BASE_URL,GLAB_COMMAND=glab" \
   --set-secrets "GITLAB_TOKEN=flux-gitlab-token:latest,NOTION_TOKEN=flux-notion-token:latest"
 ```
 

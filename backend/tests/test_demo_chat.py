@@ -30,13 +30,20 @@ def ask(workspace_id: str, message: str) -> dict:
 def test_demo_questions_return_grounded_answers():
     workspace_id = create_workspace()
 
-    assert "Marcus" in ask(workspace_id, "Who actually owns the auth system?")["answer"]
-    assert "Sarah" in ask(workspace_id, "Who should I avoid pinging right now?")["answer"]
-    assert "#412" in ask(workspace_id, "What should I work on to make an impact in week 1?")["answer"]
-    assert "GraphQL" in ask(workspace_id, "Is there anything I shouldn't say in standup?")["answer"]
-    assert "PR template" in ask(workspace_id, "How do I get a PR merged fast?")["answer"]
-    assert "Thursday" in ask(workspace_id, "Which meetings actually matter?")["answer"]
-    assert "auth/session.ts" in ask(workspace_id, "What's the fastest way to understand this codebase?")["answer"]
+    cases = [
+        ("Who actually owns the auth system?", ["Based on GitLab activity", "Marcus", "71%"]),
+        ("Who should I avoid pinging right now?", ["Per the team guide", "Sarah", "Priya"]),
+        ("What should I work on to make an impact in week 1?", ["Based on GitLab activity", "#412", "#89"]),
+        ("Is there anything I shouldn't say in standup?", ["Per the team guide", "GraphQL", "v1 to v2"]),
+        ("How do I get a PR merged fast?", ["Based on GitLab activity", "PR template", "Friday"]),
+        ("Which meetings actually matter?", ["Per the team guide", "Thursday", "Tuesday"]),
+        ("What's the fastest way to understand this codebase?", ["Based on GitLab activity", "auth/session.ts", "billing/invoices.ts"]),
+    ]
+
+    for question, expected_fragments in cases:
+        answer = ask(workspace_id, question)["answer"]
+        for fragment in expected_fragments:
+            assert fragment in answer
 
 
 def test_assignment_question_returns_action_without_executing_it():

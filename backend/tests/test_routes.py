@@ -37,8 +37,18 @@ def test_brief_returns_four_flux_sections():
     assert response.status_code == 200
     brief = response.json()["brief"]
     assert set(brief.keys()) == {"now", "people", "moves", "landmines"}
-    assert "SSO migration" in brief["now"]["body"]
-    assert "Marcus" in brief["people"]["body"]
+    assert "SSO migration P1" in brief["now"]["body"]
+    assert "blocked on Okta" in brief["now"]["body"]
+    assert "Do not touch /auth" in brief["now"]["body"]
+    assert "Marcus reviewed 71%" in brief["people"]["body"]
+    assert "Sarah is on parental leave" in brief["people"]["body"]
+    assert "Priya is 80% focused" in brief["people"]["body"]
+    assert "Dev owns infra/CI" in brief["people"]["body"]
+    assert "billing/#412" in brief["moves"]["body"]
+    assert "notifications/#89" in brief["moves"]["body"]
+    assert "GraphQL" in brief["landmines"]["body"]
+    assert "#eng-general" in brief["landmines"]["body"]
+    assert "PR template is mandatory" in brief["landmines"]["body"]
 
 
 def test_chat_returns_answer_with_sources():
@@ -64,3 +74,16 @@ def test_chat_returns_answer_with_sources():
     assert "Marcus" in payload["answer"]
     assert "GitLab activity" in payload["sources"]
     assert "Team guide" in payload["sources"]
+
+
+def test_health_returns_mode_and_version(monkeypatch):
+    monkeypatch.setenv("FLUX_AGENT_MODE", "live")
+
+    response = client.get("/api/health")
+
+    assert response.status_code == 200
+    assert response.json() == {
+        "status": "ok",
+        "mode": "live",
+        "version": "1.0.0",
+    }

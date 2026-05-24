@@ -1,3 +1,7 @@
+import pytest
+from google.api_core.exceptions import NotFound, ServiceUnavailable
+from google.genai.errors import ClientError
+
 from services import agent_builder
 
 
@@ -88,3 +92,55 @@ def test_demo_mode_still_uses_deterministic_fallback(monkeypatch):
 
     assert "Marcus" in response["answer"]
     assert response["action"] is None
+
+
+@pytest.mark.anyio
+async def test_vertex_location_retry_uses_configured_location_then_fallbacks(monkeypatch):
+    monkeypatch.setenv("GOOGLE_CLOUD_LOCATION", "us-east4")
+    attempted_locations = []
+
+    async def fake_agent_run(model):
+        attempted_locations.append((model, agent_builder.os.environ["GOOGLE_CLOUD_LOCATION"]))
+        if len(attempted_locations) == 1:
+            raise NotFound("model not available there")
+        return {"ok": True}
+
+    result = await agent_builder._try_vertex_locations("gemini-2.0-flash", fake_agent_run)
+
+    assert result == {"ok": True}
+    assert attempted_locations == [
+        ("gemini-2.0-flash", "us-east4"),
+        ("gemini-2.0-flash", "us-central1"),
+    ]
+
+
+@pytest.mark.anyio
+async def test_vertex_location_retry_raises_after_retriable_failures(monkeypatch):
+    monkeypatch.delenv("GOOGLE_CLOUD_LOCATION", raising=False)
+    attempted_locations = []
+
+    async def fake_agent_run(model):
+        attempted_locations.append(agent_builder.os.environ["GOOGLE_CLOUD_LOCATION"])
+        raise ServiceUnavailable("region unavailable")
+
+    with pytest.raises(ServiceUnavailable):
+        await agent_builder._try_vertex_locations("gemini-2.0-flash", fake_agent_run)
+
+    assert attempted_locations == ["us-central1", "us-east4", "us-west1", "europe-west4"]
+
+
+@pytest.mark.anyio
+async def test_vertex_location_retry_handles_genai_client_404(monkeypatch):
+    monkeypatch.delenv("GOOGLE_CLOUD_LOCATION", raising=False)
+    attempted_locations = []
+
+    async def fake_agent_run(model):
+        attempted_locations.append(agent_builder.os.environ["GOOGLE_CLOUD_LOCATION"])
+        if len(attempted_locations) == 1:
+            raise ClientError(404, {"error": {"status": "NOT_FOUND"}})
+        return {"ok": True}
+
+    result = await agent_builder._try_vertex_locations("gemini-2.0-flash", fake_agent_run)
+
+    assert result == {"ok": True}
+    assert attempted_locations == ["us-central1", "us-east4"]

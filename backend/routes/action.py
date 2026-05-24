@@ -36,7 +36,8 @@ def confirm_action(payload: ActionConfirmRequest) -> ActionConfirmResponse:
     if not issue_id or not project or not username:
         raise HTTPException(status_code=400, detail="Incomplete assignment action")
 
-    if os.getenv("GITLAB_TOKEN") and os.getenv("GITLAB_PROJECT_URL"):
+    live_mode = os.getenv("FLUX_AGENT_MODE", "demo").lower() == "live"
+    if live_mode and os.getenv("GITLAB_TOKEN") and os.getenv("GITLAB_PROJECT_URL"):
         live_username = os.getenv("GITLAB_USERNAME") if username == "newhire" else username
         username = live_username or username
         try:
@@ -55,6 +56,6 @@ def confirm_action(payload: ActionConfirmRequest) -> ActionConfirmResponse:
 
     return ActionConfirmResponse(
         success=True,
-        message=f"Issue #{issue_id} assigned to {username}.",
-        gitlab_url=f"https://gitlab.com/demo/{project}/-/issues/{issue_id}",
+        message=f"Issue #{issue_id} assigned to you in GitLab.",
+        gitlab_url=f"https://gitlab.com/demo-org/{project}/-/issues/{issue_id}",
     )

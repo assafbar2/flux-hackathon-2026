@@ -16,17 +16,25 @@ Flux replaces stale onboarding docs with a live day-one agent. It reads what the
 
 ## Timeline
 
-### 0:00-0:20 — The Problem
+### 0:00-0:40 — The Problem
 
 Say:
 
-> Most onboarding tells a new engineer the official org chart. That is almost never how the team actually works. Flux shows the org as it runs: who owns what, what is on fire, what not to touch, and where a new hire can safely make their first contribution.
+> Every month, 4 million people start a new job. In tech, 26 million engineers work across hundreds of thousands of engineering teams — and almost every one of them goes through the same broken ritual on day one: a PDF, a stale wiki, and a manager who says "just ask around."
+>
+> The problem isn't the new hire. The problem is that the onboarding doc was written 8 months ago by someone who's since left. It shows you the org chart. It doesn't tell you who actually reviews the auth code, what's on fire this week, or why you should never ask about GraphQL in standup.
+>
+> The result: it takes the average engineer 60 to 90 days to become genuinely productive. That's $20,000 in salary and management time per hire — before they ship a single line of code that matters.
+>
+> There's also a trust problem. New hires who feel lost in week one disengage. Teams that invest in a great first day retain people longer and ramp them faster. And teams that show up with AI-powered tooling on day one — not buried in an onboarding doc, but live and answering real questions — signal something important: we are an AI-first team. That matters for recruiting, for retention, and for the kind of engineers you attract.
+>
+> Flux fixes this. Not with a better template. With a live agent that reads the actual work — and tells the new hire the real org, not the drawn one.
 
 Optional visual:
 
-- Show a stale onboarding doc or just stay on the Flux landing page.
+- Show a stale onboarding PDF or the Flux landing page while speaking.
 
-### 0:20-0:40 — HR Setup
+### 0:40-0:55 — HR Setup
 
 Action:
 
@@ -37,9 +45,9 @@ Action:
 
 Say:
 
-> HR only needs a GitLab token and a Notion team guide URL. For this demo, the production service already has secure server-side configuration, so I can generate a new-hire link without putting secrets in the browser. Behind this page, Flux runs on Cloud Run and orchestrates Gemini through Google ADK with GitLab MCP tools.
+> HR only needs a GitLab token and a Notion team guide URL. For this demo, the production service already has secure server-side configuration, so I can generate a new-hire link without putting secrets in the browser. Behind this page, Flux runs on Cloud Run and orchestrates Gemini through Google Cloud Agent Builder — using the ADK Python SDK — with GitLab MCP tools.
 
-### 0:40-1:15 — The Flux Brief
+### 0:55-1:25 — The Flux Brief
 
 Action:
 
@@ -56,7 +64,7 @@ Call out:
 - `Week 1 Moves`: billing and notifications are safe first areas.
 - `Landmines`: GraphQL and Friday deploys are sensitive.
 
-### 1:15-2:05 — Grounded Questions
+### 1:25-2:15 — Grounded Questions
 
 Ask these using the prompt buttons or chat box:
 
@@ -88,7 +96,7 @@ Say:
 
 > This is the kind of onboarding knowledge that rarely appears in official docs but matters immediately.
 
-### 2:05-2:45 — The Action Moment
+### 2:15-2:50 — The Action Moment
 
 Ask:
 
@@ -107,7 +115,7 @@ Say:
 
 > Flux moves beyond chat. It proposes a concrete first task, asks for confirmation, and then writes back to GitLab through the GitLab MCP server.
 
-### 2:45-3:00 — Close
+### 2:50-3:00 — Close
 
 Say:
 

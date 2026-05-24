@@ -39,8 +39,11 @@ def test_confirm_assign_issue_returns_success_without_chat_side_effect(monkeypat
     assert response.status_code == 200
     payload = response.json()
     assert payload["success"] is True
-    assert payload["gitlab_url"].endswith("/billing/-/issues/412")
-    assert "assigned" in payload["message"]
+    assert payload == {
+        "success": True,
+        "message": "Issue #412 assigned to you in GitLab.",
+        "gitlab_url": "https://gitlab.com/demo-org/billing/-/issues/412",
+    }
 
 
 def test_confirm_assign_issue_uses_live_gitlab_when_configured(monkeypatch):
@@ -56,6 +59,7 @@ def test_confirm_assign_issue_uses_live_gitlab_when_configured(monkeypatch):
 
     monkeypatch.setenv("GITLAB_TOKEN", "token")
     monkeypatch.setenv("GITLAB_PROJECT_URL", "https://gitlab.com/assafbar-group/flux-demo")
+    monkeypatch.setenv("FLUX_AGENT_MODE", "live")
     monkeypatch.setattr(routes.action, "GitLabMcpClient", FakeGitLabClient)
 
     setup = client.post(
@@ -96,6 +100,7 @@ def test_confirm_assign_issue_replaces_placeholder_username_with_config(monkeypa
     monkeypatch.setenv("GITLAB_TOKEN", "token")
     monkeypatch.setenv("GITLAB_PROJECT_URL", "https://gitlab.com/assafbar-group/flux-demo")
     monkeypatch.setenv("GITLAB_USERNAME", "assafbar")
+    monkeypatch.setenv("FLUX_AGENT_MODE", "live")
     monkeypatch.setattr(routes.action, "GitLabMcpClient", FakeGitLabClient)
 
     setup = client.post(

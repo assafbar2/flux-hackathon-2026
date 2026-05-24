@@ -4,5 +4,6 @@ pydantic==2.13.4
 python-dotenv==1.1.0
 httpx==0.28.1
 google-adk==2.1.0
+google-api-core==2.28.1
 mcp==1.27.1
 pytest==8.3.5

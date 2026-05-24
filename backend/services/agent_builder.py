@@ -1,8 +1,10 @@
 import asyncio
 import json
 import os
+from collections.abc import Awaitable, Callable
 from typing import Any
 
+from google.api_core.exceptions import NotFound, ResourceExhausted, ServiceUnavailable
 from google.adk.agents.llm_agent import LlmAgent
 from google.adk.artifacts.in_memory_artifact_service import InMemoryArtifactService
 from google.adk.runners import Runner
@@ -10,6 +12,7 @@ from google.adk.sessions import InMemorySessionService
 from google.adk.tools.mcp_tool import McpToolset
 from google.adk.tools.mcp_tool.mcp_session_manager import StdioConnectionParams
 from google.genai import types
+from google.genai.errors import ClientError, ServerError
 from mcp import StdioServerParameters
 
 from services.demo_intelligence import (
@@ -74,6 +77,10 @@ CHAT_SCHEMA = {
     "required": ["answer", "sources", "action"],
 }
 
+VERTEX_RETRY_LOCATIONS = ("us-central1", "us-east4", "us-west1", "europe-west4")
+RETRIABLE_VERTEX_ERRORS = (NotFound, ServiceUnavailable, ResourceExhausted)
+RETRIABLE_GENAI_STATUS_CODES = {404, 429, 503}
+
 
 def live_mode_enabled() -> bool:
     return os.getenv("FLUX_AGENT_MODE", "demo").lower() == "live"
@@ -103,6 +110,39 @@ def _extract_json(text: str) -> dict[str, Any]:
     return json.loads(stripped[start : end + 1])
 
 
+def _vertex_locations() -> list[str]:
+    configured = os.getenv("GOOGLE_CLOUD_LOCATION", "").strip()
+    locations = [configured] if configured else []
+    locations.extend(VERTEX_RETRY_LOCATIONS)
+    return list(dict.fromkeys(location for location in locations if location))
+
+
+def _is_retriable_vertex_error(exc: Exception) -> bool:
+    if isinstance(exc, RETRIABLE_VERTEX_ERRORS):
+        return True
+    if isinstance(exc, (ClientError, ServerError)):
+        return getattr(exc, "code", None) in RETRIABLE_GENAI_STATUS_CODES
+    return False
+
+
+async def _try_vertex_locations(
+    model: str,
+    agent_factory_fn: Callable[[str], Awaitable[dict[str, Any]]],
+) -> dict[str, Any]:
+    last_error: Exception | None = None
+    for location in _vertex_locations():
+        os.environ["GOOGLE_CLOUD_LOCATION"] = location
+        try:
+            return await agent_factory_fn(model)
+        except Exception as exc:
+            if not _is_retriable_vertex_error(exc):
+                raise
+            last_error = exc
+    if last_error:
+        raise last_error
+    return await agent_factory_fn(model)
+
+
 class AdkGeminiRunner:
     """Google ADK runner using Gemini and the GitLab MCP toolset."""
 
@@ -113,6 +153,12 @@ class AdkGeminiRunner:
     def generate_json(self, *, task: str, payload: dict[str, Any]) -> dict[str, Any]:
         try:
             return asyncio.run(self._generate_json(task=task, payload=payload, model=self.model))
+        except RETRIABLE_VERTEX_ERRORS:
+            if self.fallback_model and self.fallback_model != self.model:
+                return asyncio.run(
+                    self._generate_json(task=task, payload=payload, model=self.fallback_model)
+                )
+            raise
         except Exception:
             if self.fallback_model and self.fallback_model != self.model:
                 return asyncio.run(
@@ -122,8 +168,24 @@ class AdkGeminiRunner:
 
     async def _generate_json(self, *, task: str, payload: dict[str, Any], model: str) -> dict[str, Any]:
         os.environ.setdefault("GOOGLE_GENAI_USE_VERTEXAI", "True")
-        os.environ.setdefault("GOOGLE_CLOUD_LOCATION", os.getenv("GOOGLE_CLOUD_LOCATION", "us-central1"))
+        if os.getenv("GOOGLE_GENAI_USE_VERTEXAI", "True").lower() == "true":
+            return await _try_vertex_locations(
+                model,
+                lambda candidate_model: self._run_adk_agent(
+                    task=task,
+                    payload=payload,
+                    model=candidate_model,
+                ),
+            )
+        return await self._run_adk_agent(task=task, payload=payload, model=model)
 
+    async def _run_adk_agent(
+        self,
+        *,
+        task: str,
+        payload: dict[str, Any],
+        model: str,
+    ) -> dict[str, Any]:
         toolset = self._gitlab_toolset()
         agent = LlmAgent(
             model=model,

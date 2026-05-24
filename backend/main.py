@@ -1,3 +1,4 @@
+import os
 from pathlib import Path
 
 from fastapi import FastAPI
@@ -32,7 +33,11 @@ app.include_router(action.router, prefix="/api")
 
 @app.get("/api/health")
 def health() -> dict[str, str]:
-    return {"status": "ok"}
+    return {
+        "status": "ok",
+        "mode": os.getenv("FLUX_AGENT_MODE", "demo"),
+        "version": "1.0.0",
+    }
 
 
 STATIC_DIR = Path(__file__).resolve().parent / "static"
