@@ -114,14 +114,14 @@ Important honesty for judges and reviewers:
 
 ## Judging Fit
 
-Devpost judges score equally on technological implementation, design, potential impact, and quality of idea.
+Contest judges score equally on technological implementation, design, potential impact, and quality of idea.
 
 - **Technological implementation:** Cloud Run app, Gemini-powered ADK agent, GitLab MCP read/write tools, Notion ingestion, Secret Manager, fallback reliability, and backend tests.
 - **Design:** one-link new-hire flow, visible demo mode, source attribution, four-section brief, and explicit confirmation before write actions.
 - **Potential impact:** onboarding ramp is expensive and repeated across every growing team; Flux turns scattered work truth into useful day-one guidance.
 - **Quality of idea:** Flux maps the living organization from actual work signals instead of repeating a stale org chart.
 
-Agent Builder proof notes live in `docs/AGENT_BUILDER_PROOF.md`. Devpost copy lives in `docs/DEVPOST_SUBMISSION.md`.
+Agent Builder proof notes live in `docs/AGENT_BUILDER_PROOF.md`. Submission copy lives in `docs/DEVPOST_SUBMISSION.md`.
 
 ## Architecture
 
@@ -250,7 +250,7 @@ allUsers -> Cloud Run Invoker -> service flux
 - Handoff notes: `docs/HANDOFF.md`
 - Roadmap: `docs/ROADMAP.md`
 - Agent Builder proof notes: `docs/AGENT_BUILDER_PROOF.md`
-- Devpost submission draft: `docs/DEVPOST_SUBMISSION.md`
+- Submission form draft: `docs/DEVPOST_SUBMISSION.md`
 - Submission checklist: `docs/submission-checklist.md`
 - Notion guide shape: see `backend/demo_data/notion_page.md`
 - GitLab demo issue flow: ask `Assign issue #412 to me`, then click `Confirm assignment`

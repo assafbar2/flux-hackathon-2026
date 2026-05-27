@@ -2,7 +2,7 @@
 
 Last updated: May 27, 2026.
 
-## Required By Devpost
+## Required By Contest Submission
 
 - [x] Pick partner track: GitLab.
 - [x] Hosted project URL exists.

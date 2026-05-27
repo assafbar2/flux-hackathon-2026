@@ -1,6 +1,6 @@
-# Devpost Submission Draft
+# Submission Form Draft
 
-Use this as the copy source for the final Devpost form. Replace placeholder URLs before submitting.
+Use this as the copy source for the final contest submission form. Replace placeholder URLs before submitting.
 
 ## Project Name
 

@@ -4,7 +4,7 @@ Last updated: May 27, 2026.
 
 ## Requirement Reading
 
-The Devpost requirement says Flux must be a functional agent powered by Gemini and Google Cloud Agent Builder, with a partner MCP server. It does not explicitly require a console-created Agent Builder artifact or screenshot.
+The contest requirement says Flux must be a functional agent powered by Gemini and Google Cloud Agent Builder, with a partner MCP server. It does not explicitly require a console-created Agent Builder artifact or screenshot.
 
 Flux satisfies the code-first Agent Builder path by using Google ADK on Cloud Run:
 
@@ -70,7 +70,7 @@ backend/services/gitlab_mcp.py
 
 ## Console Proof To Capture Before Submission
 
-Capture these screenshots for the Devpost video or README if time allows:
+Capture these screenshots for the submission video or README if time allows:
 
 1. Cloud Run service details for `flux`, showing the public URL and latest revision.
 2. Cloud Run revision environment variables showing `FLUX_AGENT_MODE=live`, `GOOGLE_GENAI_USE_VERTEXAI=True`, and Gemini model settings. Do not show secret values.
