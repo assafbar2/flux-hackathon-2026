@@ -10,6 +10,24 @@ The org is always in flux. The org chart is a snapshot that is already stale the
 
 It works on a second level too: a new hire is in flux. Week one is disorienting, and Flux meets them there with real intelligence instead of another static PDF.
 
+## For Judges
+
+Start here:
+
+- Live app: https://flux-153593352872.us-central1.run.app
+- Health check: https://flux-153593352872.us-central1.run.app/api/health
+- Demo script: `docs/DEMO_SCRIPT.md`
+- Agent Builder / Agent Platform proof: `docs/AGENT_BUILDER_PROOF.md`
+- Submission checklist: `docs/submission-checklist.md`
+
+The core evidence to verify:
+
+1. Flux runs publicly on Cloud Run.
+2. `/api/health` returns `mode: "live"`.
+3. The backend uses Google ADK `LlmAgent` + `Runner`.
+4. GitLab MCP is registered through `McpToolset` and `glab mcp serve`.
+5. The confirmed assignment flow calls GitLab MCP `glab_issue_update`.
+
 ## Why Flux Exists
 
 Onboarding today is mostly a static promise: a PDF, a wiki page, a few links, and a manager saying "just ask around." That material is usually stale before the new hire reads it. It describes the official org chart, but not the real operating system of the company: who actually reviews auth, which migration is politically sensitive, who is on leave, which Slack channels are performative, and which first task is safe.
