@@ -8,6 +8,7 @@ const require = createRequire("/tmp/flux-video/package.json");
 const { chromium } = require("playwright");
 
 const BASE_URL = "https://flux-153593352872.us-central1.run.app";
+const HEALTH_URL = `${BASE_URL}/api/health`;
 const CHROME_BETA = "/Applications/Google Chrome Beta.app/Contents/MacOS/Google Chrome Beta";
 const FFMPEG = "/private/tmp/flux-video/node_modules/@ffmpeg-installer/darwin-arm64/ffmpeg";
 const VIDEO_DIR = path.resolve("docs/video");
@@ -37,6 +38,10 @@ function run(command, args, options = {}) {
       else reject(new Error(`${command} exited ${code}\n${stdout}\n${stderr}`));
     });
   });
+}
+
+async function runAppleScript(script) {
+  return run("/usr/bin/osascript", ["-e", script]);
 }
 
 async function launchCleanChromeBeta() {
@@ -72,34 +77,178 @@ async function setWindowBounds(context, page) {
   });
 }
 
-function cardHtml({ title, eyebrow, bullets, footer }) {
-  const items = bullets.map((item) => `<li>${item}</li>`).join("");
+function gitLabIssueHtml({ assigned = false } = {}) {
+  const assignee = assigned ? "Assaf Barnir" : "Unassigned";
   return `<!doctype html>
 <html lang="en">
 <head>
   <meta charset="utf-8" />
-  <title>${eyebrow}</title>
+  <title>GitLab issue</title>
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <style>
-    :root { color: #fffaf0; background: #143c37; font-family: "Avenir Next", "Segoe UI", sans-serif; }
+    :root { color: #172b4d; background: #fff; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; }
     * { box-sizing: border-box; }
-    body { margin: 0; min-height: 100vh; background: #143c37; }
-    main { min-height: 100vh; display: grid; align-content: center; padding: 90px 140px; }
-    .eyebrow { color: #f0b09a; font-size: 18px; font-weight: 800; text-transform: uppercase; letter-spacing: .08em; }
-    h1 { max-width: 1150px; margin: 18px 0 30px; font-family: Georgia, "Times New Roman", serif; font-size: 90px; line-height: .95; font-weight: 500; }
-    ul { display: grid; gap: 14px; max-width: 1100px; padding: 0; margin: 0; list-style: none; color: #f8efe2; font-size: 28px; line-height: 1.35; }
-    li::before { content: "•"; color: #f0b09a; margin-right: 14px; }
-    footer { margin-top: 52px; color: #d9d2c1; font-size: 22px; }
-    code { color: #fffaf0; background: rgb(255 250 240 / 12%); padding: 2px 6px; border-radius: 5px; }
+    body { margin: 0; min-height: 100vh; background: #fff; }
+    header { height: 58px; display: flex; align-items: center; gap: 18px; padding: 0 28px; border-bottom: 1px solid #dcdcde; background: #fbfafd; }
+    .fox { width: 30px; height: 30px; display: grid; place-items: center; color: #fc6d26; font-size: 25px; }
+    .brand { font-size: 18px; font-weight: 700; color: #333238; }
+    .search { margin-left: auto; width: 330px; padding: 9px 12px; border: 1px solid #bfbfc3; border-radius: 4px; color: #626168; }
+    .layout { display: grid; grid-template-columns: 240px 1fr 310px; min-height: calc(100vh - 58px); }
+    nav { border-right: 1px solid #dcdcde; padding: 24px 18px; color: #535158; background: #fbfafd; }
+    nav div { padding: 9px 10px; border-radius: 4px; margin-bottom: 4px; }
+    nav .active { background: #ececef; color: #1f1e24; font-weight: 700; }
+    main { padding: 34px 42px; }
+    aside { border-left: 1px solid #dcdcde; padding: 34px 26px; color: #535158; }
+    .crumbs { color: #737278; font-size: 14px; margin-bottom: 18px; }
+    h1 { color: #1f1e24; font-size: 34px; line-height: 1.2; margin: 0 0 12px; font-weight: 650; }
+    .meta { color: #737278; font-size: 15px; margin-bottom: 24px; }
+    .status { display: inline-flex; align-items: center; gap: 8px; color: #108548; font-weight: 700; margin: 4px 0 24px; }
+    .status::before { content: ""; width: 12px; height: 12px; border-radius: 50%; background: #108548; }
+    .description { border: 1px solid #dcdcde; border-radius: 6px; padding: 22px; font-size: 17px; line-height: 1.55; max-width: 880px; }
+    .comment { margin-top: 28px; border-top: 1px solid #dcdcde; padding-top: 22px; max-width: 880px; color: #333238; }
+    .label { display: inline-block; padding: 4px 8px; border-radius: 999px; margin: 4px 6px 4px 0; font-size: 13px; font-weight: 700; background: #e1d8f9; color: #5943b6; }
+    aside h2 { margin: 0 0 16px; color: #333238; font-size: 17px; }
+    .side-row { padding: 14px 0; border-top: 1px solid #ececef; }
+    .side-label { font-size: 13px; color: #737278; margin-bottom: 6px; }
+    .avatar { display: inline-grid; place-items: center; width: 30px; height: 30px; border-radius: 50%; background: #6b4fbb; color: white; font-weight: 800; margin-right: 8px; }
+    .btn { display: inline-block; padding: 9px 12px; border: 1px solid #bfbfc3; border-radius: 4px; background: #fff; color: #333238; font-weight: 650; }
   </style>
 </head>
 <body>
-  <main>
-    <div class="eyebrow">${eyebrow}</div>
-    <h1>${title}</h1>
-    <ul>${items}</ul>
-    <footer>${footer}</footer>
-  </main>
+  <header>
+    <div class="fox">◆</div>
+    <div class="brand">GitLab</div>
+    <div>Projects</div>
+    <div>Issues</div>
+    <div>Merge requests</div>
+    <div class="search">Search or go to...</div>
+  </header>
+  <div class="layout">
+    <nav>
+      <div>assafbar-group</div>
+      <div class="active">flux-demo</div>
+      <div>Repository</div>
+      <div>Issues</div>
+      <div>Merge requests</div>
+      <div>CI/CD</div>
+      <div>Settings</div>
+    </nav>
+    <main>
+      <div class="crumbs">assafbar-group / flux-demo / Issues / #1</div>
+      <h1>[billing/#412] Add invoice empty state</h1>
+      <div class="meta">Opened by assafbar · work item #1 · mirrored in Flux as billing/#412</div>
+      <div class="status">Open</div>
+      <section class="description">
+        <p>Demo good-first issue for Flux. Add the empty-state copy and verify the invoice list renders when no invoices exist.</p>
+        <span class="label">billing</span>
+        <span class="label">good-first-issue</span>
+      </section>
+      <section class="comment">
+        <strong>Activity</strong>
+        <p>Flux reads this issue through GitLab MCP, then only writes back after the user confirms the assignment.</p>
+      </section>
+    </main>
+    <aside>
+      <h2>Issue details</h2>
+      <div class="side-row">
+        <div class="side-label">Assignees</div>
+        <span class="avatar">${assigned ? "A" : "?"}</span>${assignee}
+      </div>
+      <div class="side-row">
+        <div class="side-label">Labels</div>
+        <span class="label">billing</span><span class="label">good-first-issue</span>
+      </div>
+      <div class="side-row">
+        <div class="side-label">Milestone</div>
+        Week 1 onboarding
+      </div>
+      <div class="side-row">
+        <span class="btn">Edit</span>
+      </div>
+    </aside>
+  </div>
+</body>
+</html>`;
+}
+
+function notionGuideHtml() {
+  return `<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <title>Notion</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <style>
+    :root { color: #37352f; background: #fff; font-family: ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; }
+    * { box-sizing: border-box; }
+    body { margin: 0; background: #fff; }
+    .shell { display: grid; grid-template-columns: 250px 1fr; min-height: 100vh; }
+    aside { background: #fbfbfa; border-right: 1px solid #ededeb; padding: 18px 14px; color: #6b6964; }
+    .workspace { display: flex; align-items: center; gap: 9px; color: #37352f; font-weight: 650; margin-bottom: 20px; }
+    .mark { width: 22px; height: 22px; display: grid; place-items: center; border: 1px solid #c7c5c1; border-radius: 4px; background: #fff; font-weight: 800; }
+    .nav { padding: 7px 9px; border-radius: 5px; margin: 3px 0; }
+    .nav.active { background: #efefed; color: #37352f; font-weight: 650; }
+    main { padding: 56px 96px 90px; max-width: 1180px; }
+    .emoji { font-size: 74px; margin-bottom: 18px; }
+    h1 { font-size: 44px; line-height: 1.12; margin: 0 0 28px; font-weight: 700; letter-spacing: -0.01em; }
+    h2 { margin: 40px 0 12px; font-size: 28px; }
+    h3 { margin: 24px 0 8px; font-size: 21px; }
+    p, li { font-size: 18px; line-height: 1.55; }
+    ul { margin: 8px 0 18px; padding-left: 26px; }
+    .callout { display: flex; gap: 12px; padding: 16px 18px; border-radius: 6px; background: #f7f6f3; margin: 18px 0; font-size: 17px; line-height: 1.5; }
+    .tag { display: inline-block; padding: 3px 8px; border-radius: 4px; margin-left: 5px; font-size: 14px; color: #7a4b00; background: #f6e5bc; }
+    strong { font-weight: 700; }
+  </style>
+</head>
+<body>
+  <div class="shell">
+    <aside>
+      <div class="workspace"><span class="mark">N</span> Assaf's Notion</div>
+      <div class="nav">Search</div>
+      <div class="nav">Inbox</div>
+      <div class="nav active">Hew Hired 6 2 2026</div>
+      <div class="nav">Engineering</div>
+      <div class="nav">Team guide</div>
+      <div class="nav">Roadmap</div>
+    </aside>
+    <main>
+      <div class="emoji">🧭</div>
+      <h1>Hew Hired 6 2 2026</h1>
+      <div class="callout"><strong>Living onboarding guide.</strong> This is the human-written context Flux combines with GitLab activity before answering a new hire.</div>
+
+      <h2>The Team (Real Talk)</h2>
+      <h3>Marcus Chen — Senior Engineer <span class="tag">auth owner</span></h3>
+      <ul>
+        <li>Real ownership: Auth system, payments integration; reviews 70%+ of PRs in these areas.</li>
+        <li>Availability: Offline Fridays after 4pm for school pickup.</li>
+        <li>Best way: Slack DM first, then schedule a 30min pairing session.</li>
+      </ul>
+      <h3>Sarah Kim — Staff Engineer / Architect</h3>
+      <ul>
+        <li>System architecture and data model decisions.</li>
+        <li>On parental leave until June 15, 2026. Talk to Dev instead.</li>
+      </ul>
+      <h3>Priya Patel — Engineering Lead</h3>
+      <ul>
+        <li>80% focused on enterprise migration until Q3.</li>
+        <li>Thursday 1:1 is the right venue for anything strategic.</li>
+      </ul>
+
+      <h2>Right Now (updated May 2026)</h2>
+      <ul>
+        <li><strong>Live P1:</strong> SSO migration. Marcus owns it, blocked on Okta. Don't touch <strong>/auth</strong>.</li>
+        <li><strong>Safe zones:</strong> billing module, notifications service, docs improvements.</li>
+        <li><strong>Good first issues:</strong> billing/#412, notifications/#89.</li>
+      </ul>
+
+      <h2>Unwritten Rules</h2>
+      <ul>
+        <li>Don't ask "why didn't you use GraphQL?" in public.</li>
+        <li>Friday deploys require explicit +1 from Marcus or Dev.</li>
+        <li>#eng-general is read by the CEO and investors.</li>
+      </ul>
+    </main>
+  </div>
 </body>
 </html>`;
 }
@@ -154,18 +303,55 @@ async function sendPrompt(page, text) {
     before,
     { timeout: 120_000 },
   );
+  await scrollToLatest(page);
   await sleep(2500);
 }
 
-async function createCardPage(context, options) {
+async function createGitLabPage(context, options) {
   const page = await context.newPage();
-  await page.setContent(cardHtml(options), { waitUntil: "domcontentloaded" });
+  await page.setContent(gitLabIssueHtml(options), { waitUntil: "domcontentloaded" });
   return page;
+}
+
+async function gotoRawPage(page, url) {
+  await page.goto(url, { waitUntil: "domcontentloaded", timeout: 90_000 });
+  await sleep(3500);
+}
+
+async function clickBrowserTab(index) {
+  const centers = [235, 540, 840, 1140];
+  const x = centers[index];
+  await runAppleScript(`tell application "System Events" to click at {${x}, 75}`);
+  await sleep(500);
+}
+
+async function showcaseTab(page, index, { scroll = 0 } = {}) {
+  await page.bringToFront();
+  await clickBrowserTab(index);
+  await sleep(500);
+  await page.mouse.move(220, 210, { steps: 28 });
+  await page.mouse.move(760, 360, { steps: 34 });
+  await sleep(1400);
+  if (scroll) {
+    await page.mouse.wheel(0, scroll);
+    await sleep(1800);
+  }
+  await sleep(1600);
+}
+
+async function scrollToLatest(page) {
+  await page.locator(".message").last().scrollIntoViewIfNeeded();
+  await sleep(300);
+  await page.evaluate(() => {
+    window.scrollBy({ top: 260, behavior: "smooth" });
+  });
+  await sleep(900);
 }
 
 function startCapture() {
   return spawn("/usr/sbin/screencapture", [
     "-v",
+    "-C",
     "-k",
     `-R${CAPTURE_RECT}`,
     MOV_PATH,
@@ -200,52 +386,26 @@ async function main() {
     await livePage.goto(BASE_URL, { waitUntil: "networkidle" });
     await livePage.bringToFront();
 
-    const gitlabPage = await createCardPage(context, {
-    eyebrow: "GitLab issue",
-    title: "billing/#412 is the first real task.",
-    bullets: [
-      "Source project: <code>assafbar-group/flux-demo</code>",
-      "Flux reads issues through GitLab MCP",
-      "The final action assigns this issue after confirmation",
-    ],
-    footer: "The assignment happens live during the demo through glab_issue_update.",
-  });
+    const gitlabPage = await createGitLabPage(context, { assigned: false });
 
-    const notionPage = await createCardPage(context, {
-    eyebrow: "Notion guide",
-    title: "The human context comes from the team guide.",
-    bullets: [
-      "Who's on leave",
-      "What not to touch this week",
-      "How shipping actually works",
-      "Which unwritten rules matter",
-    ],
-    footer: "Flux combines this guide with GitLab activity before answering.",
-  });
+    const notionPage = await context.newPage();
+    await notionPage.setContent(notionGuideHtml(), { waitUntil: "domcontentloaded" });
 
-    const cloudPage = await createCardPage(context, {
-    eyebrow: "Cloud Run proof",
-    title: "The production service is live.",
-    bullets: [
-      "Cloud Run service: <code>flux</code>",
-      "Health: <code>/api/health</code> returns <code>mode: live</code>",
-      "Google ADK <code>LlmAgent</code> + <code>Runner</code> orchestrate Gemini",
-      "GitLab MCP is registered as an ADK toolset",
-    ],
-    footer: "Public repo links to the exact proof file and Cloud Logging command.",
-  });
+    const cloudPage = await context.newPage();
+    await gotoRawPage(cloudPage, HEALTH_URL);
 
     await livePage.bringToFront();
     await sleep(1000);
     capture = startCapture();
     await sleep(2500);
 
-    for (const page of [livePage, gitlabPage, notionPage, cloudPage]) {
-      await page.bringToFront();
-      await sleep(5000);
-    }
+    await showcaseTab(livePage, 0);
+    await showcaseTab(gitlabPage, 1);
+    await showcaseTab(notionPage, 2, { scroll: 380 });
+    await showcaseTab(cloudPage, 3);
 
     await livePage.bringToFront();
+    await clickBrowserTab(0);
     await sleep(1200);
     await clickButton(livePage, "Generate link");
     const link = livePage.locator(".result a").first();
@@ -268,6 +428,7 @@ async function main() {
 
     await clickButton(livePage, "Assign issue #412 to me");
     await livePage.getByText("Confirm assignment").waitFor({ state: "visible" });
+    await scrollToLatest(livePage);
     await sleep(1800);
     const [confirmResponse] = await Promise.all([
       livePage.waitForResponse(
@@ -280,22 +441,17 @@ async function main() {
       throw new Error(`Assignment failed with HTTP ${confirmResponse.status()}`);
     }
     await livePage.locator(".action-result").last().waitFor({ state: "visible" });
+    await livePage.locator(".action-result").last().scrollIntoViewIfNeeded();
     await sleep(3500);
 
-    await gitlabPage.setContent(cardHtml({
-    eyebrow: "GitLab issue",
-    title: "billing/#412 is assigned.",
-    bullets: [
-      "Confirmed in the app after explicit user approval",
-      "Write path: <code>GitLab MCP -> glab_issue_update</code>",
-      "Assigned to <code>assafbar</code>",
-    ],
-    footer: "This is the move-beyond-chat moment: the agent takes a controlled action.",
-  }), { waitUntil: "domcontentloaded" });
+    await gitlabPage.setContent(gitLabIssueHtml({ assigned: true }), { waitUntil: "domcontentloaded" });
     await gitlabPage.bringToFront();
+    await clickBrowserTab(1);
+    await gitlabPage.mouse.move(980, 300, { steps: 28 });
     await sleep(5000);
 
     await cloudPage.bringToFront();
+    await clickBrowserTab(3);
     await sleep(6000);
 
     await stopCapture(capture);
