@@ -20,15 +20,15 @@ Flux replaces stale onboarding docs with a live day-one agent. It reads what the
 
 Say:
 
-> Every month, 4 million people start a new job. In tech, 26 million engineers work across hundreds of thousands of engineering teams — and almost every one of them goes through the same broken ritual on day one: a PDF, a stale wiki, and a manager who says "just ask around."
+> Hi, I'm Assaf. I built Flux for the Google Cloud Rapid Agent Hackathon because onboarding is still treated like a document problem, when it is really a live-context problem.
 >
-> The problem isn't the new hire. The problem is that the onboarding doc was written 8 months ago by someone who's since left. It shows you the org chart. It doesn't tell you who actually reviews the auth code, what's on fire this week, or why you should never ask about GraphQL in standup.
+> I started as an engineer, moved into customer-facing roles, and the latest advances in AI brought me back to building. That mix is why this problem matters to me: onboarding fails at the exact place where product, people, and real work meet.
 >
-> The result: it takes the average engineer 60 to 90 days to become genuinely productive. That's $20,000 in salary and management time per hire — before they ship a single line of code that matters.
+> Every month, millions of people start new jobs. In engineering, week one is usually a PDF, a stale wiki, and a manager saying "just ask around." But a new hire doesn't need the official org chart. They need to know who actually reviews auth, what is on fire this week, which work is safe to touch, and what unwritten rules could trip them up.
 >
-> There's also a trust problem. New hires who feel lost in week one disengage. Teams that invest in a great first day retain people longer and ramp them faster. And teams that show up with AI-powered tooling on day one — not buried in an onboarding doc, but live and answering real questions — signal something important: we are an AI-first team. That matters for recruiting, for retention, and for the kind of engineers you attract.
+> That gap costs real money. Engineers often take 60 to 90 days to become productive, and every slow ramp burns salary, manager time, and team momentum.
 >
-> Flux fixes this. Not with a better template. With a live agent that reads the actual work — and tells the new hire the real org, not the drawn one.
+> Flux fixes this with a live agent that reads the actual work in GitLab, combines it with the team's Notion guide, and gives the new hire the real org, not the drawn one.
 
 Optional visual:
 
@@ -119,7 +119,7 @@ Say:
 
 Say:
 
-> Every engineer deserves this on day one: not a PDF, not a stale org chart, but the real team context and a first task already assigned.
+> Every engineer deserves this on day one: not a PDF, not a stale org chart, but the real team context and a first task already assigned. And every company that wants to be AI-first should show it in the first experience a new hire has.
 
 ## Backup Lines
 
