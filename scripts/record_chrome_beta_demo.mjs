@@ -190,14 +190,14 @@ function notionGuideHtml() {
     .mark { width: 22px; height: 22px; display: grid; place-items: center; border: 1px solid #c7c5c1; border-radius: 4px; background: #fff; font-weight: 800; }
     .nav { padding: 7px 9px; border-radius: 5px; margin: 3px 0; }
     .nav.active { background: #efefed; color: #37352f; font-weight: 650; }
-    main { padding: 56px 96px 90px; max-width: 1180px; }
-    .emoji { font-size: 74px; margin-bottom: 18px; }
-    h1 { font-size: 44px; line-height: 1.12; margin: 0 0 28px; font-weight: 700; letter-spacing: -0.01em; }
-    h2 { margin: 40px 0 12px; font-size: 28px; }
-    h3 { margin: 24px 0 8px; font-size: 21px; }
-    p, li { font-size: 18px; line-height: 1.55; }
-    ul { margin: 8px 0 18px; padding-left: 26px; }
-    .callout { display: flex; gap: 12px; padding: 16px 18px; border-radius: 6px; background: #f7f6f3; margin: 18px 0; font-size: 17px; line-height: 1.5; }
+    main { padding: 50px 96px 90px; max-width: 1160px; }
+    .emoji { font-size: 56px; margin-bottom: 14px; }
+    h1 { font-size: 42px; line-height: 1.15; margin: 0 0 24px; font-weight: 700; letter-spacing: 0; text-transform: none; }
+    h2 { margin: 34px 0 12px; font-size: 25px; font-weight: 650; text-transform: none; letter-spacing: 0; }
+    h3 { margin: 22px 0 8px; font-size: 19px; font-weight: 650; text-transform: none; letter-spacing: 0; }
+    p, li { font-size: 16px; line-height: 1.5; text-transform: none; letter-spacing: 0; }
+    ul { margin: 8px 0 16px; padding-left: 24px; }
+    .callout { display: flex; gap: 12px; padding: 14px 16px; border-radius: 6px; background: #f7f6f3; margin: 16px 0; font-size: 16px; line-height: 1.45; text-transform: none; }
     .tag { display: inline-block; padding: 3px 8px; border-radius: 4px; margin-left: 5px; font-size: 14px; color: #7a4b00; background: #f6e5bc; }
     strong { font-weight: 700; }
   </style>
@@ -208,14 +208,14 @@ function notionGuideHtml() {
       <div class="workspace"><span class="mark">N</span> Assaf's Notion</div>
       <div class="nav">Search</div>
       <div class="nav">Inbox</div>
-      <div class="nav active">Hew Hired 6 2 2026</div>
+      <div class="nav active">New Hired 6 2 2026</div>
       <div class="nav">Engineering</div>
       <div class="nav">Team guide</div>
       <div class="nav">Roadmap</div>
     </aside>
     <main>
       <div class="emoji">🧭</div>
-      <h1>Hew Hired 6 2 2026</h1>
+      <h1>New Hired 6 2 2026</h1>
       <div class="callout"><strong>Living onboarding guide.</strong> This is the human-written context Flux combines with GitLab activity before answering a new hire.</div>
 
       <h2>The Team (Real Talk)</h2>
@@ -264,8 +264,8 @@ function cloudRunScreenshotHtml(imageBase64) {
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <style>
     * { box-sizing: border-box; }
-    body { margin: 0; background: #fff; overflow: hidden; }
-    img { display: block; width: 100vw; height: auto; }
+    body { margin: 0; background: #fff; overflow: hidden; width: 100vw; height: 100vh; display: grid; place-items: center; }
+    img { display: block; width: 100vw; height: 100vh; object-fit: contain; }
   </style>
 </head>
 <body>
