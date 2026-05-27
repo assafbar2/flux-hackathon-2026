@@ -34,6 +34,22 @@ project: direct-subject-497307-p8
 latest verified revision: flux-00012-n47
 ```
 
+Cloud Logging proof command:
+
+```bash
+gcloud logging read 'resource.type="cloud_run_revision" AND resource.labels.service_name="flux" AND (httpRequest.requestUrl:"/api/brief" OR httpRequest.requestUrl:"/api/chat" OR httpRequest.requestUrl:"/api/action/confirm")' \
+  --project direct-subject-497307-p8 \
+  --limit=5 \
+  --format='value(timestamp,httpRequest.requestMethod,httpRequest.requestUrl,httpRequest.status)'
+```
+
+Recent verified output:
+
+```text
+2026-05-27T16:19:45.887332Z  POST  https://flux-153593352872.us-central1.run.app/api/chat  200
+2026-05-27T16:19:30.938886Z  GET   https://flux-153593352872.us-central1.run.app/api/brief/Lh2PIYq5rWfc  200
+```
+
 Agent code evidence:
 
 ```text
