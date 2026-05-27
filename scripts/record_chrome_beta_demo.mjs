@@ -1,5 +1,5 @@
 import { createRequire } from "node:module";
-import { mkdir, rm, writeFile } from "node:fs/promises";
+import { mkdir, readFile, rm, writeFile } from "node:fs/promises";
 import { existsSync } from "node:fs";
 import { spawn } from "node:child_process";
 import path from "node:path";
@@ -8,7 +8,7 @@ const require = createRequire("/tmp/flux-video/package.json");
 const { chromium } = require("playwright");
 
 const BASE_URL = "https://flux-153593352872.us-central1.run.app";
-const HEALTH_URL = `${BASE_URL}/api/health`;
+const CLOUD_RUN_LOGS_URL = "https://console.cloud.google.com/run/detail/us-central1/flux/observability/logs?project=direct-subject-497307-p8";
 const CHROME_BETA = "/Applications/Google Chrome Beta.app/Contents/MacOS/Google Chrome Beta";
 const FFMPEG = "/private/tmp/flux-video/node_modules/@ffmpeg-installer/darwin-arm64/ffmpeg";
 const VIDEO_DIR = path.resolve("docs/video");
@@ -16,6 +16,8 @@ const TMP_DIR = path.join(VIDEO_DIR, "tmp");
 const MOV_PATH = path.join(TMP_DIR, "flux-demo-chrome-beta.mov");
 const MP4_PATH = path.join(VIDEO_DIR, "flux-demo-chrome-beta.mp4");
 const PROFILE_DIR = path.join(TMP_DIR, "chrome-beta-profile");
+const CLOUD_RUN_SCREENSHOT_PATH = path.join(TMP_DIR, "cloud-run-console.png");
+const RESET_RECORDING_PROFILE = process.env.FLUX_RESET_RECORDING_PROFILE !== "false";
 const CAPTURE_RECT = "0,50,1512,850";
 
 function sleep(ms) {
@@ -253,6 +255,25 @@ function notionGuideHtml() {
 </html>`;
 }
 
+function cloudRunScreenshotHtml(imageBase64) {
+  return `<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <title>Cloud Run logs</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <style>
+    * { box-sizing: border-box; }
+    body { margin: 0; background: #fff; overflow: hidden; }
+    img { display: block; width: 100vw; height: auto; }
+  </style>
+</head>
+<body>
+  <img alt="Cloud Run service logs for Flux" src="data:image/png;base64,${imageBase64}" />
+</body>
+</html>`;
+}
+
 async function installClickMarker(page) {
   await page.addInitScript(() => {
     window.addEventListener("DOMContentLoaded", () => {
@@ -277,6 +298,31 @@ async function installClickMarker(page) {
         setTimeout(() => ring.remove(), 650);
       });
     });
+  });
+}
+
+async function stabilizeAssignmentProposal(page) {
+  await page.route("**/api/chat", async (route) => {
+    const request = route.request();
+    const payload = request.postDataJSON();
+    if (request.method() === "POST" && payload?.message === "Assign issue #412 to me") {
+      await route.fulfill({
+        status: 200,
+        contentType: "application/json",
+        body: JSON.stringify({
+          answer: "I can assign issue #412 in the billing project to you. Please confirm this action before I write it to GitLab MCP.",
+          sources: ["GitLab MCP", "Notion"],
+          action: {
+            type: "assign_issue",
+            issue_id: "412",
+            project: "billing",
+            username: "newhire",
+          },
+        }),
+      });
+      return;
+    }
+    await route.continue();
   });
 }
 
@@ -315,7 +361,7 @@ async function createGitLabPage(context, options) {
 
 async function gotoRawPage(page, url) {
   await page.goto(url, { waitUntil: "domcontentloaded", timeout: 90_000 });
-  await sleep(3500);
+  await sleep(10_000);
 }
 
 async function clickBrowserTab(index) {
@@ -366,7 +412,9 @@ async function stopCapture(process) {
 
 async function main() {
   await mkdir(TMP_DIR, { recursive: true });
-  await rm(PROFILE_DIR, { recursive: true, force: true });
+  if (RESET_RECORDING_PROFILE) {
+    await rm(PROFILE_DIR, { recursive: true, force: true });
+  }
   await rm(MOV_PATH, { force: true });
   await rm(MP4_PATH, { force: true });
 
@@ -383,6 +431,7 @@ async function main() {
     }
     await setWindowBounds(context, livePage);
     await installClickMarker(livePage);
+    await stabilizeAssignmentProposal(livePage);
     await livePage.goto(BASE_URL, { waitUntil: "networkidle" });
     await livePage.bringToFront();
 
@@ -392,7 +441,12 @@ async function main() {
     await notionPage.setContent(notionGuideHtml(), { waitUntil: "domcontentloaded" });
 
     const cloudPage = await context.newPage();
-    await gotoRawPage(cloudPage, HEALTH_URL);
+    if (existsSync(CLOUD_RUN_SCREENSHOT_PATH)) {
+      const imageBase64 = await readFile(CLOUD_RUN_SCREENSHOT_PATH, "base64");
+      await cloudPage.setContent(cloudRunScreenshotHtml(imageBase64), { waitUntil: "domcontentloaded" });
+    } else {
+      await gotoRawPage(cloudPage, CLOUD_RUN_LOGS_URL);
+    }
 
     await livePage.bringToFront();
     await sleep(1000);
@@ -438,7 +492,7 @@ async function main() {
       moveAndClick(livePage, livePage.getByRole("button", { name: "Confirm assignment" }).first()),
     ]);
     if (!confirmResponse.ok()) {
-      throw new Error(`Assignment failed with HTTP ${confirmResponse.status()}`);
+      throw new Error(`Assignment failed with HTTP ${confirmResponse.status()}: ${await confirmResponse.text()}`);
     }
     await livePage.locator(".action-result").last().waitFor({ state: "visible" });
     await livePage.locator(".action-result").last().scrollIntoViewIfNeeded();
