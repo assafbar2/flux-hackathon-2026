@@ -45,7 +45,7 @@ Action:
 
 Say:
 
-> HR only needs a GitLab token and a Notion team guide URL. For this demo, the production service already has secure server-side configuration, so I can generate a new-hire link without putting secrets in the browser. Behind this page, Flux runs on Cloud Run and orchestrates Gemini through Google Cloud Agent Builder — using the ADK Python SDK — with GitLab MCP tools.
+> HR only needs a GitLab token and a Notion team guide URL. For this demo, the production service already has secure server-side configuration, so I can generate a new-hire link without putting secrets in the browser. Behind this page, Flux runs on Cloud Run. The backend creates a Google ADK LlmAgent, runs it through the ADK Runner, uses Gemini as the reasoning model, and registers GitLab MCP tools through glab mcp serve.
 
 ### 0:55-1:25 — The Flux Brief
 
@@ -113,7 +113,7 @@ Action:
 
 Say:
 
-> Flux moves beyond chat. It proposes a concrete first task, asks for confirmation, and then writes back to GitLab through the GitLab MCP server.
+> Flux moves beyond chat. It proposes a concrete first task, asks for confirmation, and then writes back to GitLab through the GitLab MCP server. In the code path, the confirmed action calls glab_issue_update, so the agent is not just answering — it is taking a controlled action in a live partner system.
 
 ### 2:50-3:00 — Close
 
@@ -133,4 +133,8 @@ If Notion is slow:
 
 If asked about Agent Builder:
 
-> The deployed build routes brief and chat generation through Google ADK with Gemini, and exposes GitLab through the official GitLab CLI MCP server. Gemini 2.0 Flash is configured as primary with a Gemini 2.5 Flash fallback because this project currently cannot access the 2.0 Flash model in the tested Vertex locations.
+> The deployed build uses the code-first Google Agent Builder / Agent Platform path: Google ADK LlmAgent plus Runner, Gemini as the model, and GitLab exposed through the official GitLab CLI MCP server. The product runtime is Cloud Run because the judges need a complete web app with onboarding links and action confirmation. I also have an Agent Builder proof note and a companion Agent Engine artifact in the repo if a console screenshot is needed.
+
+If asked what to show in Google Cloud:
+
+> Show the Cloud Run service, the live health check, and Cloud Logging for /api/brief, /api/chat, or /api/action/confirm. The runtime environment shows FLUX_AGENT_MODE=live, Gemini model settings, and Secret Manager references for GitLab and Notion tokens without exposing secret values.

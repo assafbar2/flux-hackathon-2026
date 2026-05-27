@@ -109,8 +109,19 @@ Important honesty for judges and reviewers:
 
 - `FLUX_AGENT_MODE=live` is the current deployed mode.
 - `GEMINI_MODEL=gemini-2.0-flash` is configured as the primary model, with `GEMINI_FALLBACK_MODEL=gemini-2.5-flash` because this Google Cloud project currently returns Vertex 404s for the Gemini 2.0 Flash model in the tested locations.
-- Agent orchestration uses **Google Cloud Agent Builder** via the ADK Python SDK (`LlmAgent` + `Runner`) with the GitLab MCP server registered as a toolset. Deployed on Cloud Run rather than Vertex AI Agent Engine — both are valid Google Cloud deployment targets for ADK agents.
+- Agent orchestration uses the code-first Google Agent Builder / Agent Platform path via the ADK Python SDK (`LlmAgent` + `Runner`) with the GitLab MCP server registered as a toolset. The production product is deployed on Cloud Run so judges can use the full React onboarding flow.
 - Confirmed write actions are executed only after explicit user confirmation.
+
+## Judging Fit
+
+Devpost judges score equally on technological implementation, design, potential impact, and quality of idea.
+
+- **Technological implementation:** Cloud Run app, Gemini-powered ADK agent, GitLab MCP read/write tools, Notion ingestion, Secret Manager, fallback reliability, and backend tests.
+- **Design:** one-link new-hire flow, visible demo mode, source attribution, four-section brief, and explicit confirmation before write actions.
+- **Potential impact:** onboarding ramp is expensive and repeated across every growing team; Flux turns scattered work truth into useful day-one guidance.
+- **Quality of idea:** Flux maps the living organization from actual work signals instead of repeating a stale org chart.
+
+Agent Builder proof notes live in `docs/AGENT_BUILDER_PROOF.md`. Devpost copy lives in `docs/DEVPOST_SUBMISSION.md`.
 
 ## Architecture
 
@@ -238,13 +249,16 @@ allUsers -> Cloud Run Invoker -> service flux
 - Demo script: `docs/DEMO_SCRIPT.md`
 - Handoff notes: `docs/HANDOFF.md`
 - Roadmap: `docs/ROADMAP.md`
+- Agent Builder proof notes: `docs/AGENT_BUILDER_PROOF.md`
+- Devpost submission draft: `docs/DEVPOST_SUBMISSION.md`
+- Submission checklist: `docs/submission-checklist.md`
 - Notion guide shape: see `backend/demo_data/notion_page.md`
 - GitLab demo issue flow: ask `Assign issue #412 to me`, then click `Confirm assignment`
 
 ## Submission Checklist
 
 - Cloud Run URL is public and healthy.
-- GitHub repo is switched from private to public before final submission.
+- GitHub repo is public.
 - MIT license remains present.
 - Demo video is under 3 minutes.
 - GitLab partner track is selected.
