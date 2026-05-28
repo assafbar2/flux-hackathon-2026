@@ -14,7 +14,8 @@ Last updated: May 27, 2026.
 - [x] Uses Google ADK / Agent Builder style orchestration.
 - [x] Uses partner MCP server.
 - [x] Moves beyond chat with a tool action.
-- [ ] Final demo video URL is recorded and added.
+- [x] Final demo video is uploaded publicly or unlisted.
+- [x] Final demo video URL exists: https://youtu.be/oIAdQKI1Kek
 - [ ] Final Devpost form is submitted before June 11, 2026 at 2:00 PM PDT.
 
 ## Current Public Links
@@ -22,11 +23,16 @@ Last updated: May 27, 2026.
 - App: https://flux-153593352872.us-central1.run.app
 - Health: https://flux-153593352872.us-central1.run.app/api/health
 - Repo: https://github.com/assafbar2/flux-hackathon-2026
+- Demo video: https://youtu.be/oIAdQKI1Kek
 
-## Final Values To Replace
+## Final Video Source
 
-- Hosted Project URL in `docs/DEVPOST_SUBMISSION.md`.
-- Demo Video URL in `docs/DEVPOST_SUBMISSION.md`.
+```text
+docs/video/barnir-flux-demo.mp4
+```
+
+The MP4 is intentionally not committed to GitHub because `docs/video/.gitignore`
+excludes generated video files. The public version is hosted on YouTube.
 
 ## Pre-Submission Smoke Test
 

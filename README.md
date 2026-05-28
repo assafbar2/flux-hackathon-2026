@@ -15,6 +15,7 @@ It works on a second level too: a new hire is in flux. Week one is disorienting,
 Start here:
 
 - Live app: https://flux-153593352872.us-central1.run.app
+- Demo video: https://youtu.be/oIAdQKI1Kek
 - Health check: https://flux-153593352872.us-central1.run.app/api/health
 - Demo script: `docs/DEMO_SCRIPT.md`
 - Agent Builder / Agent Platform proof: `docs/AGENT_BUILDER_PROOF.md`
@@ -180,8 +181,10 @@ frontend/
   src/components/          brief, chat, source chips
 
 docs/
-  DEMO_SCRIPT.md           3-minute video and live demo script
-  HANDOFF.md               current state for another coding agent
+  DEMO_SCRIPT.md           final hosted video script
+  DEVPOST_SUBMISSION.md    submission form draft
+  ROADMAP.md               next-step roadmap
+  AGENT_BUILDER_PROOF.md   ADK / Agent Builder evidence
 ```
 
 ## Local Development
@@ -264,8 +267,8 @@ allUsers -> Cloud Run Invoker -> service flux
 
 ## Demo Resources
 
+- Demo video: https://youtu.be/oIAdQKI1Kek
 - Demo script: `docs/DEMO_SCRIPT.md`
-- Handoff notes: `docs/HANDOFF.md`
 - Roadmap: `docs/ROADMAP.md`
 - Agent Builder proof notes: `docs/AGENT_BUILDER_PROOF.md`
 - Submission form draft: `docs/DEVPOST_SUBMISSION.md`

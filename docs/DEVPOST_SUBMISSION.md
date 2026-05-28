@@ -1,6 +1,6 @@
 # Submission Form Draft
 
-Use this as the copy source for the final contest submission form. Replace placeholder URLs before submitting.
+Use this as the copy source for the final contest submission form.
 
 ## Project Name
 
@@ -16,10 +16,6 @@ GitLab
 
 ## Hosted Project URL
 
-https://replace-with-final-live-url.example
-
-Current working URL while drafting:
-
 https://flux-153593352872.us-central1.run.app
 
 ## Repository URL
@@ -28,7 +24,9 @@ https://github.com/assafbar2/flux-hackathon-2026
 
 ## Demo Video URL
 
-https://replace-with-final-demo-video-url.example
+https://youtu.be/oIAdQKI1Kek
+
+Upload source file: `docs/video/barnir-flux-demo.mp4`
 
 ## Short Description
 

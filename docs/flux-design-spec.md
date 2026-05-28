@@ -290,25 +290,11 @@ HR fills this in before the hire's start date. Flux provides the template as a N
 
 ---
 
-## 11. Demo Script (3 minutes)
+## 11. Demo Script
 
-**0:00–0:25 — The problem**
-Show a generic onboarding PDF. "Last updated 8 months ago. David is listed as the auth lead. David left the company 3 months ago."
+The final hosted demo is at https://youtu.be/oIAdQKI1Kek.
 
-**0:25–0:45 — The setup**
-HR view: GitLab token + Notion URL. Two fields. Done. "This takes 10 minutes. You do it once."
-
-**0:45–1:15 — The Flux Brief**
-New hire opens their link. Brief generates live. Walk through all four sections. Highlight the delta: "The org chart says Priya owns auth. GitLab says Marcus reviewed 71% of auth PRs. Flux shows you both — and tells you what it means."
-
-**1:15–2:45 — Three questions + one action**
-1. *"Who should I talk to about the auth system?"* — Marcus, with evidence
-2. *"How do I ship my first PR without making enemies?"* — tag Marcus, use the template, no Friday deploys, here's why
-3. *"Anything I shouldn't say in standup?"* — yes, three things, sourced from Notion
-4. **[The action]** *"Can you assign issue #412 to me?"* — agent confirms, calls GitLab MCP, issue is assigned live on screen. "Done — issue #412 is now yours."
-
-**2:45–3:00 — The close**
-"Every engineer deserves this on day one. Not a PDF. Not a wiki. The real org — and a first task already assigned."
+The final script lives in `docs/DEMO_SCRIPT.md`. It shows the production Cloud Run app, GitLab source data, Notion source data, Cloud Run logs, the generated new-hire brief, grounded Q&A, and the confirmed GitLab issue assignment flow.
 
 ---
 

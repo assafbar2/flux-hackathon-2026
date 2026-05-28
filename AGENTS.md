@@ -18,7 +18,7 @@ Read this before using the rest of this file as a plan.
 - GitLab issue reads and confirmed assignment are live through the official GitLab CLI MCP server (`glab mcp serve`).
 - Brief and chat synthesis route through Google ADK (`LlmAgent` + `Runner`) with Gemini.
 - `GEMINI_MODEL=gemini-2.0-flash` is configured as primary with `GEMINI_FALLBACK_MODEL=gemini-2.5-flash` because this project currently returns Vertex 404s for Gemini 2.0 Flash in tested locations.
-- Judge-facing docs live in `README.md`, `docs/DEMO_SCRIPT.md`, and `docs/HANDOFF.md`.
+- Judge-facing docs live in `README.md`, `docs/DEMO_SCRIPT.md`, `docs/DEVPOST_SUBMISSION.md`, `docs/AGENT_BUILDER_PROOF.md`, `docs/ROADMAP.md`, and `docs/submission-checklist.md`.
 
 The rest of this file is the product and architecture target. Treat any conflicts in favor of the current status above plus the latest code.
 
@@ -299,13 +299,7 @@ When the project is ready to submit:
 
 1. **Hosted URL:** Deploy to Cloud Run, get a public URL
 2. **GitHub repo:** Public, MIT license visible in README, clear setup instructions
-3. **Demo video:** Under 3 minutes, on YouTube or Vimeo. Follow this script:
-   - 0:00–0:25: Show a generic stale onboarding PDF. "David is the auth lead." David left 4 months ago.
-   - 0:25–0:45: HR setup — GitLab token + Notion URL. Two fields. 10 minutes of work, done once.
-   - 0:45–1:15: New hire opens Flux. Brief generates. Walk through all 4 sections.
-   - 1:15–2:30: Three demo questions answered live (who owns auth, how to ship fast, standup landmines).
-   - 2:30–2:50: **The action moment** — new hire asks "can you assign issue #412 to me?" Agent confirms, calls GitLab, issue is assigned live on screen.
-   - 2:50–3:00: "Every engineer deserves this on day one. Not a PDF. The real org — and a first task already assigned."
+3. **Demo video:** Under 3 minutes, hosted at https://youtu.be/oIAdQKI1Kek. Final script lives in `docs/DEMO_SCRIPT.md`.
 4. **Partner track:** GitLab
 
 ---
@@ -344,21 +338,20 @@ When the project is ready to submit:
 │   │   └── influence_graph.py  ← GitLab data → real org map
 │   └── requirements.txt
 └── docs/
-    └── superpowers/
-        └── specs/
-            └── 2026-05-07-flux-design.md  ← full design spec, read this too
+    ├── flux-design-spec.md   ← full design spec
+    ├── DEMO_SCRIPT.md        ← final hosted video script
+    ├── ROADMAP.md            ← next-step roadmap
+    └── AGENT_BUILDER_PROOF.md
 ```
 
 ---
 
-## How to Start
+## How to Continue
 
-1. Read `docs/superpowers/specs/2026-05-07-flux-design.md` for the full design rationale
-2. Scaffold the file structure above
-3. Build Phase 1 (skeleton) first — get a running app with stubbed routes
-4. Then Phase 2 (data ingestion) — GitLab MCP + Notion API working
-5. Then Phase 3 (Gemini) — wire up the agent brain
-6. Don't polish the frontend until the data pipeline works end-to-end
+1. Read `docs/flux-design-spec.md` for the original design rationale.
+2. Read `docs/DEMO_SCRIPT.md` and `docs/DEVPOST_SUBMISSION.md` before changing public-facing copy.
+3. Keep the Cloud Run, ADK, Gemini, GitLab MCP, and Notion architecture intact.
+4. Preserve the blank-field judge flow and explicit confirmation before any GitLab write.
 
 **When in doubt:** ship something that demos well over something that's architected perfectly. This is a 19-day hackathon.
 
@@ -374,6 +367,6 @@ When the project is ready to submit:
 
 ---
 
-*Project spec: docs/superpowers/specs/2026-05-07-flux-design.md*
+*Project spec: docs/flux-design-spec.md*
 *Hackathon: Google Cloud Rapid Agent Hackathon — deadline June 11, 2026*
 *Partner track: GitLab*

@@ -22,11 +22,11 @@ This folder gives us a small, reviewable source artifact for an Agent Engine com
 
 - `agent.py`: defines `root_agent`.
 - `requirements.txt`: minimal runtime dependencies.
-- `deploy_agent_engine.py`: deployment scaffold with placeholders.
+- `deploy_agent_engine.py`: companion deployment descriptor for the same ADK agent shape.
 
 ## Before Deploying
 
-Confirm the exact current Agent Engine deploy API in the Google Cloud docs, then replace the placeholder values in `deploy_agent_engine.py`.
+Use the values in `deploy_agent_engine.py` if a companion Agent Engine deployment or console screenshot is needed.
 
 Expected values:
 

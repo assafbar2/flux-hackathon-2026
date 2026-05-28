@@ -1,140 +1,74 @@
 # Flux Demo Script
 
-Target length: 2:45 to 3:00.
+Final hosted video: https://youtu.be/oIAdQKI1Kek
 
-## Setup Before Recording
+Final runtime: 2:28. The first 33 seconds are intentionally held on the Flux setup page so the personal intro can be read cleanly before the product walkthrough starts.
 
-- Open the live app: https://flux-153593352872.us-central1.run.app
-- Open the GitLab issue list in another tab.
-- Keep the Notion team guide available if you want to show the HR-maintained source.
-- Use blank setup fields unless you specifically want to show the token flow. Blank fields are safer for video because the deployed service already has Secret Manager configuration.
-- If issue `#412` is already assigned, unassign it before recording or say "Flux can assign it live" and show the confirmed result.
+## Voiceover
 
-## The Story
+### 0:00-0:33 - Personal Intro
 
-Flux replaces stale onboarding docs with a live day-one agent. It reads what the team actually does in GitLab, combines it with the HR-maintained Notion guide, and turns that into a new-hire brief plus a first real action.
+Hi, I'm Assaf Barnir. I'm an ex-engineer who moved into customer-facing roles, and the recent advances in AI brought me back to building.
 
-## Timeline
+Flux comes from a pain I've seen from both sides: as a hiring manager and as someone being hired myself. Onboarding looks documented, but the truth of how a team works is usually scattered across tools and people.
 
-### 0:00-0:40 — The Problem
+### 0:33-0:41 - Flux Framing
 
-Say:
+Flux is built for the reality that companies are always in flux, and new hires are too. The org chart is stale the moment it's printed. Flux reads what is actually moving.
 
-> Hi, I'm Assaf. I built Flux for the Google Cloud Rapid Agent Hackathon because onboarding is still treated like a document problem, when it is really a live-context problem.
->
-> I started as an engineer, moved into customer-facing roles, and the latest advances in AI brought me back to building. That mix is why this problem matters to me: onboarding fails at the exact place where product, people, and real work meet.
->
-> Every month, millions of people start new jobs. In engineering, week one is usually a PDF, a stale wiki, and a manager saying "just ask around." But a new hire doesn't need the official org chart. They need to know who actually reviews auth, what is on fire this week, which work is safe to touch, and what unwritten rules could trip them up.
->
-> That gap costs real money. Engineers often take 60 to 90 days to become productive, and every slow ramp burns salary, manager time, and team momentum.
->
-> Flux fixes this with a live agent that reads the actual work in GitLab, combines it with the team's Notion guide, and gives the new hire the real org, not the drawn one.
+### 0:41-0:48 - GitLab Source
 
-Optional visual:
+Here are the raw ingredients. GitLab gives real issues, ownership signals, review activity, and the work a new hire can actually pick up.
 
-- Show a stale onboarding PDF or the Flux landing page while speaking.
+### 0:48-0:59 - Notion Source
 
-### 0:40-0:55 — HR Setup
+Notion gives the human context: who owns what, who is unavailable, what not to touch, and the unwritten rules that never make it into formal onboarding.
 
-Action:
+### 0:59-1:10 - Cloud Run Proof
 
-1. Show the Flux setup page.
-2. Leave the fields blank for demo mode.
-3. Click `Generate link`.
-4. Open the generated onboarding link.
+And this runs live on Google Cloud Run. The service is deployed, observable, and serving requests from the public Flux app.
 
-Say:
+### 1:10-1:23 - Generate Link
 
-> HR only needs a GitLab token and a Notion team guide URL. For this demo, the production service already has secure server-side configuration, so I can generate a new-hire link without putting secrets in the browser. Behind this page, Flux runs on Cloud Run. The backend creates a Google ADK LlmAgent, runs it through the ADK Runner, uses Gemini as the reasoning model, and registers GitLab MCP tools through glab mcp serve.
+Now the new hire opens Flux. They don't need to configure anything for the demo. Flux uses the deployed GitLab and Notion data to generate a live onboarding brief.
 
-### 0:55-1:25 — The Flux Brief
+### 1:23-1:38 - Brief
 
-Action:
+The brief is not a static checklist. It says what is happening now, who actually owns each area, what is safe to work on in week one, and what political landmines to avoid.
 
-Scroll the four brief sections.
+### 1:38-1:55 - Grounded Q&A
 
-Say:
+Then the new hire can ask practical questions: who owns auth, how to ship fast, and what not to say in standup. Answers are grounded in GitLab activity and the team guide.
 
-> This is the day-one brief. It tells the new hire what is active right now, who actually owns key systems, what to work on in week one, and what unwritten rules could hurt them if they learn them too late.
+### 1:55-2:17 - Confirmed GitLab Action
 
-Call out:
+The key move beyond chat is action. Flux proposes assigning billing issue 412, waits for confirmation, then writes back to GitLab through the MCP path.
 
-- `Right Now`: SSO migration is a live P1.
-- `Your People Map`: Marcus is the de facto auth owner based on review share.
-- `Week 1 Moves`: billing and notifications are safe first areas.
-- `Landmines`: GraphQL and Friday deploys are sensitive.
+So Flux turns onboarding from a frozen PDF into a living, grounded, action-taking agent for week one.
 
-### 1:25-2:15 — Grounded Questions
+### 2:17-2:28 - Visual Tail
 
-Ask these using the prompt buttons or chat box:
+No additional voiceover. The video leaves the confirmed assignment and final app state on screen.
 
-```text
-Who owns auth?
-```
+## What The Video Shows
 
-Say:
+- The public Flux app at `https://flux-153593352872.us-central1.run.app`.
+- GitLab as the partner system of record for issues, ownership signals, and confirmed issue assignment.
+- Notion as the human team guide for availability, norms, and unwritten rules.
+- Cloud Run logs as deployment and observability proof.
+- A blank-field setup flow using deployed demo data, so judges can click through without entering credentials.
+- The new-hire brief, grounded Q&A, and confirmed `Assign issue #412 to me` flow.
 
-> Flux does not answer from the org chart. It cites GitLab MCP data and the team guide.
+## Backup Demo Lines
 
-Ask:
-
-```text
-How do I ship fast?
-```
-
-Say:
-
-> This combines live GitLab MCP data with the team's written and unwritten shipping rules.
-
-Ask:
-
-```text
-Anything I shouldn't say in standup?
-```
-
-Say:
-
-> This is the kind of onboarding knowledge that rarely appears in official docs but matters immediately.
-
-### 2:15-2:50 — The Action Moment
-
-Ask:
-
-```text
-Assign issue #412 to me
-```
-
-Action:
-
-1. Wait for Flux to propose the assignment.
-2. Click `Confirm assignment`.
-3. Show the success message.
-4. Switch to GitLab and show the issue assignment if available.
-
-Say:
-
-> Flux moves beyond chat. It proposes a concrete first task, asks for confirmation, and then writes back to GitLab through the GitLab MCP server. In the code path, the confirmed action calls glab_issue_update, so the agent is not just answering — it is taking a controlled action in a live partner system.
-
-### 2:50-3:00 — Close
-
-Say:
-
-> Every engineer deserves this on day one: not a PDF, not a stale org chart, but the real team context and a first task already assigned. And every company that wants to be AI-first should show it in the first experience a new hire has.
-
-## Backup Lines
-
-If the GitLab write is already assigned:
+If the GitLab issue is already assigned:
 
 > The live action path is connected. This issue is already assigned from a previous run, which is what we expect after a successful demo.
 
-If Notion is slow:
-
-> Flux has deterministic fallback data for demo reliability, but the deployed service is configured to read the live Notion team guide when available.
-
 If asked about Agent Builder:
 
-> The deployed build uses the code-first Google Agent Builder / Agent Platform path: Google ADK LlmAgent plus Runner, Gemini as the model, and GitLab exposed through the official GitLab CLI MCP server. The product runtime is Cloud Run because the judges need a complete web app with onboarding links and action confirmation. I also have an Agent Builder proof note and a companion Agent Engine artifact in the repo if a console screenshot is needed.
+> The deployed build uses the code-first Google Agent Builder / Agent Platform path: Google ADK LlmAgent plus Runner, Gemini as the model, and GitLab exposed through the official GitLab CLI MCP server. The product runtime is Cloud Run because the judges need a complete web app with onboarding links and action confirmation.
 
 If asked what to show in Google Cloud:
 
-> Show the Cloud Run service, the live health check, and Cloud Logging for /api/brief, /api/chat, or /api/action/confirm. The runtime environment shows FLUX_AGENT_MODE=live, Gemini model settings, and Secret Manager references for GitLab and Notion tokens without exposing secret values.
+> Show the Cloud Run service, the live health check, and Cloud Logging for `/api/brief`, `/api/chat`, or `/api/action/confirm`. The runtime environment shows `FLUX_AGENT_MODE=live`, Gemini model settings, and Secret Manager references for GitLab and Notion tokens without exposing secret values.
