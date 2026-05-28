@@ -17,6 +17,7 @@ It works on a second level too: a new hire is in flux. Week one is disorienting,
 Start here:
 
 - Live app: https://flux-153593352872.us-central1.run.app
+- Devpost submission: https://devpost.com/software/flux-veocby
 - Demo video: https://youtu.be/oIAdQKI1Kek
 - Health check: https://flux-153593352872.us-central1.run.app/api/health
 - Demo script: `docs/DEMO_SCRIPT.md`
@@ -269,6 +270,7 @@ allUsers -> Cloud Run Invoker -> service flux
 
 ## Demo Resources
 
+- Devpost submission: https://devpost.com/software/flux-veocby
 - Demo video: https://youtu.be/oIAdQKI1Kek
 - Demo script: `docs/DEMO_SCRIPT.md`
 - Roadmap: `docs/ROADMAP.md`
@@ -280,6 +282,7 @@ allUsers -> Cloud Run Invoker -> service flux
 
 ## Submission Checklist
 
+- Submitted to Devpost on May 28, 2026: https://devpost.com/software/flux-veocby
 - Cloud Run URL is public and healthy.
 - GitHub repo is public.
 - MIT license remains present.

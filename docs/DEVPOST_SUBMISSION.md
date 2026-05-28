@@ -2,6 +2,8 @@
 
 Use this as the copy source for the final contest submission form.
 
+Submitted on May 28, 2026: https://devpost.com/software/flux-veocby
+
 ## Project Name
 
 Flux

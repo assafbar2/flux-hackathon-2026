@@ -11,6 +11,7 @@ Read this entire file before writing a single line of code. Everything you need 
 Read this before using the rest of this file as a plan.
 
 - Live app: https://flux-153593352872.us-central1.run.app
+- Devpost submission: https://devpost.com/software/flux-veocby
 - Cloud Run service: `flux`, region `us-central1`, project `direct-subject-497307-p8`
 - Current deployed mode: `FLUX_AGENT_MODE=live`
 - Public access is enabled with `allUsers -> Cloud Run Invoker` on the `flux` service.
@@ -197,7 +198,7 @@ Implemented:
 7. Cloud Run deployment with Secret Manager wiring.
 8. Public README, demo video, submission draft, roadmap, and proof notes.
 
-Remaining work before submission is submission hygiene only: final smoke test, Devpost form, and any optional screenshot proof.
+Submitted to Devpost on May 28, 2026. Remaining work is post-submission maintenance only unless a judge or organizer requests a change.
 
 ---
 
