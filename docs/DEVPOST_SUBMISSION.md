@@ -30,7 +30,7 @@ Upload source file: `docs/video/barnir-flux-demo.mp4`
 
 ## Short Description
 
-Flux is an onboarding intelligence agent for engineers joining GitLab-based teams. It reads actual GitLab activity and an HR-maintained Notion guide, then creates a day-one brief that shows what is active, who really owns each system, what to work on first, and what unwritten rules to avoid. When the new hire is ready, Flux moves beyond chat by assigning a first GitLab issue after explicit confirmation.
+Flux gives every new hire the real team map on day one: what is moving, who owns what, what to avoid, and the first GitLab issue they can safely take. It uses Google ADK, Gemini, GitLab MCP, Notion, and Cloud Run to turn live work signals into grounded onboarding guidance and confirmed GitLab actions.
 
 ## What It Does
 

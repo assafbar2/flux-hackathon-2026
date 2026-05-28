@@ -1,6 +1,6 @@
 # Submission Checklist
 
-Last updated: May 27, 2026.
+Last updated: May 28, 2026.
 
 ## Required By Contest Submission
 
@@ -24,6 +24,15 @@ Last updated: May 27, 2026.
 - Health: https://flux-153593352872.us-central1.run.app/api/health
 - Repo: https://github.com/assafbar2/flux-hackathon-2026
 - Demo video: https://youtu.be/oIAdQKI1Kek
+
+## Submit On Devpost
+
+- Hackathon page: https://rapid-agent.devpost.com/
+- Submission portal: https://devpost.com/submit-to/29711-google-cloud-rapid-agent-hackathon/manage/submissions
+- Copy source: `docs/DEVPOST_SUBMISSION.md`
+
+Before clicking `Submit project`, verify the Devpost preview shows the live app,
+public GitHub repo, YouTube video, GitLab track, and MIT license.
 
 ## Final Video Source
 

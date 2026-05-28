@@ -2,7 +2,9 @@
 
 The org as it runs, not as it is drawn.
 
-Flux is a Google Cloud Rapid Agent Hackathon project for onboarding engineers into GitLab-based teams. It reads GitLab activity and an HR-maintained Notion guide, generates a day-one brief, answers grounded onboarding questions, and can assign a first GitLab issue after explicit confirmation.
+Flux gives every new hire the real team map on day one: what is moving, who owns what, what to avoid, and the first GitLab issue they can safely take.
+
+Built for the Google Cloud Rapid Agent Hackathon, Flux uses Google ADK, Gemini, GitLab MCP, Notion, and Cloud Run to turn live work signals into grounded onboarding guidance and confirmed GitLab actions.
 
 ## Why The Name
 

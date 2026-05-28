@@ -4,7 +4,7 @@
 
 - **Live merge request ingestion.** The current build reads GitLab issues live and uses MR data from a pre-loaded fixture for the influence graph. The next step is calling `glab_mr_list` in real time so the ownership map — who reviews what, fastest reviewer turnaround — reflects actual recent activity in the connected org, not demo data.
 - **Per-workspace GitLab token passthrough.** HR admins can already enter their own GitLab token in the setup form. Wiring that token through to the live agent calls (currently the deployed service uses a server-side token) would make each Flux workspace fully isolated and org-specific.
-- **"Demo mode" indicator on the setup page.** When fields are left blank, Flux activates server-side demo configuration. Making that visible in the UI removes ambiguity for new users exploring the product.
+- **Persistent workspace storage.** Workspaces are currently held in memory for the hackathon demo. Moving them to Firestore would keep generated onboarding links stable across Cloud Run cold starts and revisions.
 
 ## Version 2
 

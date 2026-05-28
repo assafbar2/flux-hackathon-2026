@@ -143,11 +143,11 @@ Every answer should cite its source: *"Based on GitLab activity over the last 90
 | Partner integration | GitLab MCP (official partner MCP server) | Required for GitLab prize track — both read AND write operations |
 | Team context | Notion public API (`/v1/blocks/{id}/children`) | Simple read, no auth complexity |
 | Frontend | React + TypeScript + Vite | Fast to build, easy to host |
-| Backend/API | FastAPI (Python) or Next.js API routes | Thin layer, just orchestrates calls |
+| Backend/API | FastAPI (Python) | Serves the API and built frontend from one Cloud Run service |
 | Hosting | Google Cloud Run | Required by hackathon, $100 credit available |
 | License | MIT (required by hackathon) |  |
 
-**Google Cloud credit available:** $100, expires June 4. Redeem before building.
+**Google Cloud credit:** $100 credit is available for Cloud Run, Secret Manager, and Vertex/Gemini usage during the hackathon.
 
 ---
 
@@ -184,37 +184,20 @@ Every answer should cite its source: *"Based on GitLab activity over the last 90
 
 ---
 
-## What to Build (In This Order)
+## Current Build
 
-### Phase 1: Skeleton (get something running)
-1. `README.md` with setup instructions
-2. Vite + React frontend — two pages: `/setup` (HR) and `/onboard/:id` (new hire)
-3. FastAPI backend with three routes: `POST /api/setup`, `GET /api/brief/:id`, `POST /api/chat`
-4. `.env.example` with required keys: `GITLAB_TOKEN`, `NOTION_TOKEN`, `GOOGLE_CLOUD_PROJECT`, `GEMINI_MODEL`
-5. `Dockerfile` for Cloud Run deployment
+Implemented:
 
-### Phase 2: Data ingestion
-1. GitLab MCP integration — install and configure the official GitLab MCP server (both read and write scopes: `read_api` + `write_repository`)
-2. Notion API client — fetch page content recursively, parse into 4 sections
-3. Data normalization — turn raw GitLab activity into the influence graph (reviewer % per repo, PR turnaround per person, open P1 issues)
+1. React + TypeScript setup and onboarding flows.
+2. FastAPI routes for setup, brief generation, chat, action proposal, action confirmation, and health.
+3. Notion ingestion with deterministic fallback data for judge reliability.
+4. GitLab MCP issue reads and confirmed issue assignment through `glab mcp serve`.
+5. Google ADK `LlmAgent` + `Runner` orchestration with Gemini and GitLab MCP registered as a toolset.
+6. Explicit confirmation UI before any GitLab write.
+7. Cloud Run deployment with Secret Manager wiring.
+8. Public README, demo video, submission draft, roadmap, and proof notes.
 
-### Phase 3: Agent brain
-1. Wire up Google Cloud Agent Builder as the orchestration layer — register GitLab MCP and Notion as Agent Builder tools (not raw API calls). Agent Builder manages tool invocation, session context, and the human-in-the-loop confirmation for write actions.
-2. Gemini 2.0 Flash prompt for Flux Brief generation (4 sections, grounded in data)
-3. Gemini 2.0 Flash prompt for chat Q&A (grounded, cites sources)
-4. **Write action flow:** when the agent surfaces good-first issues, it offers to assign them. Agent Builder presents a confirmation step. On confirm, agent calls `assign_issue` via GitLab MCP. This is what satisfies the hackathon's "Move Beyond Chat" requirement — the agent takes a real-world action.
-
-### Phase 4: Frontend polish
-1. Flux Brief UI (4 section cards, clean layout)
-2. Chat interface (simple, shows source attribution)
-3. **Action confirmation UI** — when agent proposes assigning an issue, show a confirm button before executing the write. Must be explicit — no auto-assign.
-4. Loading states (brief takes 10–30 seconds to generate — show progress)
-5. HR setup flow (simple form, shows the generated hire link)
-
-### Phase 5: Deploy
-1. Cloud Run deployment via `gcloud run deploy`
-2. Environment variable wiring via Secret Manager
-3. Test the full flow end-to-end
+Remaining work before submission is submission hygiene only: final smoke test, Devpost form, and any optional screenshot proof.
 
 ---
 
